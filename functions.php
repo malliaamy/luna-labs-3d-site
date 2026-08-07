@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('LUNA_THEME_VERSION', '1.6.8');
+define('LUNA_THEME_VERSION', '1.6.12');
 
 function luna_setup(): void {
     add_theme_support('title-tag');
@@ -16,6 +16,7 @@ add_action('after_setup_theme', 'luna_setup');
 function luna_assets(): void {
     wp_enqueue_style('luna-prototype', get_template_directory_uri() . '/assets/css/prototype.css', [], LUNA_THEME_VERSION);
     wp_enqueue_style('luna-theme', get_template_directory_uri() . '/assets/css/theme.css', ['luna-prototype'], LUNA_THEME_VERSION);
+    wp_enqueue_style('luna-footer-shared', get_template_directory_uri() . '/assets/css/footer-shared.css', ['luna-theme'], LUNA_THEME_VERSION);
     wp_enqueue_script('luna-theme', get_template_directory_uri() . '/assets/js/theme.js', [], LUNA_THEME_VERSION, true);
 }
 add_action('wp_enqueue_scripts', 'luna_assets');

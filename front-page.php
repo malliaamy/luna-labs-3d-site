@@ -3,7 +3,7 @@ $home = add_query_arg([
     'desktopAngle' => (float) get_theme_mod('luna_desktop_angle', -5),
     'mobileAngle' => (float) get_theme_mod('luna_mobile_angle', -50),
     'scrollRotation' => (float) get_theme_mod('luna_scroll_rotation', 83),
-], get_template_directory_uri() . '/lab-home/index.html?v=4');
+], get_template_directory_uri() . '/lab-home/index.html?v=8');
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -71,7 +71,7 @@ $home = add_query_arg([
       };
       const legacyProduct = /(^|\.)lunalabs3d\.com$/i.test(url.hostname) && url.pathname.startsWith('/product/');
       if (url.origin !== location.origin && !legacyProduct && !labelledRoutes[label]) return;
-      const destination = labelledRoutes[label] || (url.pathname.includes('/lab-home/index.html?v=3') ? (routes[url.hash] || '/') : url.pathname + url.search + (url.hash === '#quote' ? '' : url.hash));
+      const destination = labelledRoutes[label] || (url.pathname.endsWith('/lab-home/index.html') ? (routes[url.hash] || '/') : url.pathname + url.search + (url.hash === '#quote' ? '' : url.hash));
       event.preventDefault();
       event.stopImmediatePropagation();
       parent.location.assign(destination);

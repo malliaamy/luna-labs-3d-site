@@ -19,7 +19,7 @@ $colours = [
     'Gold' => '#d4a72c', 'Forest' => '#365742', 'Moss' => '#5d7047', 'Violet' => '#6d4ca8', 'Azure' => '#3d7ca6',
 ];
 ?>
-<article class="product-page dragon-product-page" data-dragon-configurator data-model-url="<?php echo esc_url(get_template_directory_uri() . '/lab-home/assets/dragon-tower-web.glb'); ?>">
+<article class="product-page dragon-product-page" data-dragon-configurator data-model-url="<?php echo esc_url(get_template_directory_uri() . '/lab-home/assets/dragon-tower-web.glb?v=' . LUNA_THEME_VERSION); ?>" data-fallback-url="<?php echo esc_url(get_template_directory_uri() . '/lab-home/assets/dragon-tower-02.jpg'); ?>">
   <div class="product-back-row">
     <a class="product-back-link" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">← Back to shop</a>
     <span>DnD / Dragon Dice Tower</span>

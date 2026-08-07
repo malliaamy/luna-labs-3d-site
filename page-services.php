@@ -35,7 +35,7 @@
   <div class="commission-contact-intro"><span>Prefer to speak first?</span><h2 id="commission-contact-title">Contact the studio directly.</h2><p>Use the quote tool for an immediate estimate, or get in touch if your project needs a conversation first.</p></div>
   <a href="mailto:<?php echo esc_attr(get_theme_mod('luna_email', 'lunalabs3d@gmail.com')); ?>"><span>Email</span><strong><?php echo esc_html(get_theme_mod('luna_email', 'lunalabs3d@gmail.com')); ?></strong><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></a>
   <a href="tel:<?php echo esc_attr(get_theme_mod('luna_phone', '+356 7771 8303')); ?>"><span>Phone</span><strong><?php echo esc_html(get_theme_mod('luna_phone', '+356 7771 8303')); ?></strong><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></a>
-  <a href="<?php echo esc_url(get_theme_mod('luna_instagram')); ?>" target="_blank" rel="noreferrer"><span>Instagram</span><strong>@lunalabs3d</strong><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></a>
+  <a href="<?php echo esc_url(get_theme_mod('luna_instagram', 'https://www.instagram.com/lunalabs3d/')); ?>" target="_blank" rel="noopener noreferrer" aria-label="Instagram — @lunalabs3d (opens in a new tab)"><span>Instagram</span><strong>@lunalabs3d</strong><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></a>
 </section>
 
 <section class="brief-guide">

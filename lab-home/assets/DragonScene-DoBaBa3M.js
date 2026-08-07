@@ -298,7 +298,7 @@ function w() {
             t.material = e[O]
         })
     }, [O]), (0, x.jsxs)(`div`, {
-        className: `dragon-experience`,
+        className: A === `error` ? `dragon-experience is-fallback` : `dragon-experience`,
         children: [(0, x.jsxs)(`div`, {
             className: `dragon-canvas`,
             ref: e,
@@ -332,7 +332,7 @@ function w() {
                     y: 0
                 }, E.current.active = !1
             },
-            "aria-label": `Interactive 3D model of the Luna Labs dragon dice tower. Drag to rotate.`,
+            "aria-label": A === `error` ? `Finished Luna Labs dragon dice tower photograph.` : `Interactive 3D model of the Luna Labs dragon dice tower. Drag to rotate.`,
             children: [A === `error` && (0, x.jsx)(`img`, {
                 className: `model-fallback`,
                 src: `./assets/dragon-tower-02.jpg`,
@@ -364,7 +364,7 @@ function w() {
             className: `finish-note finish-note-${O}`,
             children: [(0, x.jsx)(`span`, {
                 "aria-hidden": `true`
-            }), S.find(e => e.id === O)?.note]
+            }), (S.find(e => e.id === O) || {}).note]
         })]
     })
 }
