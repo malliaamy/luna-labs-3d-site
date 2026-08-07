@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Luna WebGL Check</title>
+<style>
+body{background:#080906;color:#f3efe6;font:16px/1.6 -apple-system,system-ui,sans-serif;padding:24px;margin:0}
+h1{font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:#c8ff3d;margin:0 0 18px}
+table{border-collapse:collapse;width:100%;max-width:900px}
+td{padding:9px 10px;border-bottom:1px solid #ffffff22;vertical-align:top;font-size:15px}
+td:first-child{color:#b8b7af;width:230px}
+.bad{color:#ff6b6b;font-weight:700}
+.good{color:#c8ff3d;font-weight:700}
+</style></head><body>
+<h1>Luna Labs / WebGL diagnostic</h1>
+<table id="t"></table>
+<script>
+function row(k,v,cls){
+  var tr=document.createElement('tr');
+  var a=document.createElement('td');a.textContent=k;
+  var b=document.createElement('td');b.textContent=v;if(cls)b.className=cls;
+  tr.appendChild(a);tr.appendChild(b);document.getElementById('t').appendChild(tr);
+}
+var c=document.createElement('canvas');
+var gl2=c.getContext('webgl2');
+var gl1=gl2||c.getContext('webgl')||c.getContext('experimental-webgl');
+row('User agent',navigator.userAgent);
+row('WebGL2 available',gl2?'YES':'NO', gl2?'good':'bad');
+if(gl1){
+  var dbg=gl1.getExtension('WEBGL_debug_renderer_info');
+  row('GPU renderer',dbg?gl1.getParameter(dbg.UNMASKED_RENDERER_WEBGL):'(hidden)');
+  row('GPU vendor',dbg?gl1.getParameter(dbg.UNMASKED_VENDOR_WEBGL):'(hidden)');
+  row('GL version',gl1.getParameter(gl1.VERSION));
+  row('Max texture size',gl1.getParameter(gl1.MAX_TEXTURE_SIZE));
+  row('Max vertex attribs',gl1.getParameter(gl1.MAX_VERTEX_ATTRIBS));
+  if(!gl2){
+    var ui=gl1.getExtension('OES_element_index_uint');
+    row('32-bit indices (WebGL1)',ui?'YES':'NO - THIS IS THE BUG',ui?'good':'bad');
+  }
+}else{ row('WebGL','NOT AVAILABLE','bad'); }
+var simd=new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,10,22,2,12,0,65,0,65,0,65,0,252,10,0,0,11,7,0,65,0,253,15,26,11]);
+var ok=(typeof WebAssembly==='object')&&WebAssembly.validate(simd);
+row('WASM SIMD reported',ok?'YES':'NO');
+fetch('/wp-content/themes/luna-labs/lab-home/assets/meshopt_decoder.module-CoX9bj3I.js',{cache:'no-store'})
+ .then(function(r){return r.text()})
+ .then(function(t){
+   var forced=t.indexOf('luna: forced scalar path')>-1;
+   row('Scalar-decoder fix loaded',forced?'YES (fix is live)':'NO - still cached, hard-reload',forced?'good':'bad');
+ }).catch(function(){row('Scalar-decoder fix loaded','could not check','bad')});
+</script></body></html>
