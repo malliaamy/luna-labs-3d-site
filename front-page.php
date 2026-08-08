@@ -3,7 +3,7 @@ $home = add_query_arg([
     'desktopAngle' => (float) get_theme_mod('luna_desktop_angle', -5),
     'mobileAngle' => (float) get_theme_mod('luna_mobile_angle', -50),
     'scrollRotation' => (float) get_theme_mod('luna_scroll_rotation', 83),
-], get_template_directory_uri() . '/lab-home/index.html?v=10');
+], get_template_directory_uri() . '/lab-home/index.html?v=12');
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -85,7 +85,7 @@ $home = add_query_arg([
         };
         fetch('/wp-json/wc/store/v1/cart', { credentials: 'same-origin', cache: 'no-store' })
           .then(r => r.json())
-          .then(c => { cartCount = (c && c.items_count) || 0; paintBadge(); if (doc.body) new MutationObserver(paintBadge).observe(doc.body, { childList: true, subtree: true }); })
+          .then(c => { cartCount = (c && c.items_count) || 0; paintBadge(); if (doc.body && frame.contentWindow.MutationObserver) new frame.contentWindow.MutationObserver(paintBadge).observe(doc.body, { childList: true, subtree: true }); })
           .catch(() => {});
   });
 })();

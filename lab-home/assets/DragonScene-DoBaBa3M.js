@@ -245,9 +245,13 @@ function w() {
         let F = new f(16734767, 4.5, 7);
         F.position.set(3.4, -1.7, 2.6), x.add(F);
         let I = !1,
+            Z = window.setTimeout(() => {
+                I || j(`error`)
+            }, 3e4),
             L = new p;
         L.setMeshoptDecoder(v), L.load(`./assets/dragon-tower-web.glb?v=fbx-20260730`, e => {
             if (I) return;
+            window.clearTimeout(Z);
             let t = e.scene;
             t.rotation.x = 0, t.updateMatrixWorld(!0);
             let i = new u().setFromObject(t),
@@ -259,7 +263,9 @@ function w() {
             t.traverse(e => {
                 e instanceof y && (e.material = A.sculpt, e.frustumCulled = !0, c.push(e))
             }), n.current = c, k.add(t), j(`ready`)
-        }, void 0, () => j(`error`));
+        }, void 0, () => {
+            window.clearTimeout(Z), j(`error`)
+        });
         let R = () => {
                 let e = b.clientWidth,
                     t = b.clientHeight;
@@ -290,7 +296,7 @@ function w() {
                 O.render(x, S), H = requestAnimationFrame(W)
             };
         return W(), () => {
-            I = !0, cancelAnimationFrame(H), z.disconnect(), window.removeEventListener(`scroll`, V), B.removeEventListener(`change`, V), O.dispose(), O.domElement.remove(), Object.values(A).forEach(e => e.dispose()), t.current = null, n.current = []
+            I = !0, window.clearTimeout(Z), cancelAnimationFrame(H), z.disconnect(), window.removeEventListener(`scroll`, V), B.removeEventListener(`change`, V), O.dispose(), O.domElement.remove(), Object.values(A).forEach(e => e.dispose()), t.current = null, n.current = []
         }
     }, []), (0, b.useEffect)(() => {
         let e = w.current;
@@ -335,7 +341,7 @@ function w() {
             "aria-label": A === `error` ? `Finished Luna Labs dragon dice tower photograph.` : `Interactive 3D model of the Luna Labs dragon dice tower. Drag to rotate.`,
             children: [A === `error` && (0, x.jsx)(`img`, {
                 className: `model-fallback`,
-                src: `./assets/dragon-tower-02.jpg`,
+                src: `./assets/dragon-tower-01-v2.jpg`,
                 alt: `Hand-painted Luna Labs dragon dice tower`
             }), A === `loading` && (0, x.jsxs)(`div`, {
                 className: `model-status`,
