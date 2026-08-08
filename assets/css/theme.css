@@ -482,3 +482,52 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
     padding: 10px 20px 12px;
   }
 }
+
+
+/* Mobile product-story spacing and account layout containment. */
+@media (max-width:700px){
+  .single-product .product-story-kicker,
+  .single-product .product-story-grid{
+    padding-inline:20px;
+  }
+
+  .luna-account-content>.woocommerce,
+  .luna-account-content .woocommerce-MyAccount-navigation,
+  .luna-account-content .woocommerce-MyAccount-content{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    box-sizing:border-box;
+  }
+
+  .luna-account-content .woocommerce-MyAccount-navigation ul{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    width:100%;
+    overflow:visible;
+    scroll-snap-type:none;
+  }
+
+  .luna-account-content .woocommerce-MyAccount-navigation li{
+    min-width:0;
+    border-right:1px solid #ffffff1f;
+    border-bottom:1px solid #ffffff1f;
+  }
+
+  .luna-account-content .woocommerce-MyAccount-navigation a{
+    width:100%;
+    min-width:0;
+    justify-content:flex-start;
+    padding-inline:16px;
+  }
+
+  .luna-account-content .woocommerce-MyAccount-content{
+    overflow-wrap:anywhere;
+  }
+
+  .luna-account-content .woocommerce-MyAccount-content table{
+    display:block;
+    max-width:100%;
+    overflow-x:auto;
+  }
+}
