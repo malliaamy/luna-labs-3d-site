@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('LUNA_THEME_VERSION', '1.6.21');
+define('LUNA_THEME_VERSION', '1.6.22');
 
 function luna_setup(): void {
     add_theme_support('title-tag');
@@ -149,3 +149,4 @@ function luna_customize_register(WP_Customize_Manager $customizer): void {
     }
 }
 add_action('customize_register', 'luna_customize_register');
+
