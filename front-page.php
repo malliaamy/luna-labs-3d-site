@@ -30,8 +30,8 @@ $home = add_query_arg([
       const label = (link.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
       const labelledRoutes = {
         'about':'/about/',
-        'start a project':'/services/#quote',
-        'build your quote':'/services/#quote',
+        'start a project':'/services/',
+        'build your quote':'/services/',
         'customize colours in 3d':'/product/dragon-dice-tower/',
         'see how it was made':'/work/dragon-dice-tower/'
       };

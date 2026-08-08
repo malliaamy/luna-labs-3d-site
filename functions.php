@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('LUNA_THEME_VERSION', '1.6.15');
+define('LUNA_THEME_VERSION', '1.6.21');
 
 function luna_setup(): void {
     add_theme_support('title-tag');

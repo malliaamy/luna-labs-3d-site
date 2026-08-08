@@ -531,3 +531,94 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
     overflow-x:auto;
   }
 }
+
+
+/* WooCommerce account address layout refinement. */
+.luna-account-content>.woocommerce{
+  width:min(100%,1440px);margin-inline:auto;grid-template-columns:minmax(220px,240px) minmax(0,1fr);
+  gap:clamp(28px,3vw,52px);align-items:start
+}
+.luna-account-content .woocommerce-account-guest{grid-template-columns:1fr}
+.luna-account-content .woocommerce-MyAccount-navigation,
+.luna-account-content .woocommerce-MyAccount-content{
+  float:none!important;width:100%!important;max-width:100%;min-width:0;box-sizing:border-box
+}
+.luna-account-content .woocommerce-MyAccount-navigation a{white-space:nowrap}
+.luna-account-content .woocommerce-MyAccount-navigation a:focus-visible,
+.luna-account-content .woocommerce-Address .edit:focus-visible{
+  outline:2px solid var(--luna);outline-offset:-3px
+}
+.luna-account-content .woocommerce-Addresses{
+  width:100%;margin:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:stretch
+}
+.luna-account-content .woocommerce-Address{
+  float:none!important;width:100%!important;min-width:0;min-height:290px;margin:0!important;
+  display:grid;grid-template-rows:auto 1fr auto;box-sizing:border-box;padding:clamp(24px,2.4vw,36px)
+}
+.luna-account-content .woocommerce-Address-title{display:contents}
+.luna-account-content .woocommerce-Address-title h2{
+  grid-row:1;margin:0;max-width:11ch;font-size:clamp(30px,2.6vw,42px);line-height:.92
+}
+.luna-account-content .woocommerce-Address address{
+  grid-row:2;margin:0;padding:28px 0;color:#b8b7af;font-style:normal;line-height:1.65
+}
+.luna-account-content .woocommerce-Address-title .edit{
+  grid-row:3;justify-self:start;align-self:end;font-weight:700;line-height:1.3
+}
+@media(max-width:900px){
+  .luna-account-content>.woocommerce{grid-template-columns:1fr;gap:24px}
+  .luna-account-content .woocommerce-MyAccount-navigation ul{
+    display:flex;width:100%;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-inline:contain
+  }
+  .luna-account-content .woocommerce-MyAccount-navigation li{
+    flex:0 0 auto;min-width:0;border-right:1px solid #ffffff1f;border-bottom:0;scroll-snap-align:start
+  }
+  .luna-account-content .woocommerce-MyAccount-navigation li:last-child{border-right:0}
+  .luna-account-content .woocommerce-MyAccount-navigation a{min-width:142px;justify-content:center;padding-inline:18px}
+}
+@media(max-width:700px){
+  .luna-account-content .woocommerce-MyAccount-navigation ul{display:flex;grid-template-columns:none;overflow-x:auto}
+  .luna-account-content .woocommerce-MyAccount-navigation a{width:auto;min-width:132px;justify-content:center;padding-inline:16px}
+  .luna-account-content .woocommerce-MyAccount-content{padding:24px 20px}
+  .luna-account-content .woocommerce-Addresses{grid-template-columns:1fr;gap:16px}
+  .luna-account-content .woocommerce-Address{min-height:240px;padding:24px 20px}
+  .luna-account-content .woocommerce-Address-title h2{font-size:clamp(30px,10vw,38px)}
+}
+
+.luna-account-content .woocommerce-Addresses::before,
+.luna-account-content .woocommerce-Addresses::after{content:none!important;display:none!important}
+
+
+/* Account empty-order state: match the Luna Labs dark interface. */
+.luna-account-content .woocommerce-info{
+  display:flex;align-items:center;justify-content:space-between;gap:28px;min-height:108px;
+  margin:0;padding:26px 30px;border:1px solid #ffffff25;border-top:1px solid var(--luna);
+  background:radial-gradient(circle at 92% 50%,#c8ff3d12,transparent 32%),#0e100c;
+  color:#cfcec6;box-shadow:none;font-size:15px;line-height:1.6
+}
+.luna-account-content .woocommerce-info::before{content:none!important;display:none!important}
+.luna-account-content .woocommerce-info .button{
+  flex:0 0 auto;margin:0!important;white-space:nowrap;transition:transform .18s,background .18s
+}
+.luna-account-content .woocommerce-info .button:hover{transform:translateY(-2px);background:#d5ff68!important}
+.luna-account-content .woocommerce-info .button:focus-visible{outline:2px solid var(--paper);outline-offset:3px}
+@media(max-width:700px){
+  .luna-account-content .woocommerce-info{
+    min-height:0;align-items:flex-start;flex-direction:column;gap:22px;padding:24px 20px;font-size:14px
+  }
+  .luna-account-content .woocommerce-info .button{width:100%;justify-content:center}
+}
+
+
+/* Center My Account action labels and separate the payment action. */
+.luna-account-content .woocommerce a.button,
+.luna-account-content .woocommerce button.button{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  line-height:1!important;text-align:center
+}
+.luna-account-content .woocommerce-MyAccount-content>a.button[href*="add-payment-method"]{
+  margin-top:24px!important
+}
+@media(max-width:700px){
+  .luna-account-content .woocommerce-MyAccount-content>a.button[href*="add-payment-method"]{margin-top:20px!important}
+}

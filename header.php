@@ -39,7 +39,7 @@ $items = [
       <?php endforeach; ?>
     </div>
     <div class="nav-actions">
-      <a class="nav-cta <?php echo is_page('services') ? 'is-active' : ''; ?>" href="<?php echo esc_url(home_url('/services/#quote')); ?>">Start a project <span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></a>
+      <a class="nav-cta <?php echo is_page('services') ? 'is-active' : ''; ?>" href="<?php echo esc_url(home_url('/services/')); ?>">Start a project <span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></a>
       <div class="mobile-menu">
         <button class="mobile-menu-trigger" type="button" aria-expanded="false" aria-controls="mobile-navigation"><span>Menu</span><?php luna_header_cart_count('mobile-menu-cart-count'); ?><span class="menu-glyph" aria-hidden="true"><i></i><i></i></span></button>
         <div class="mobile-menu-panel" id="mobile-navigation" aria-hidden="true">
@@ -60,7 +60,7 @@ $items = [
               <a class="<?php echo $active ? 'is-active' : ''; ?>" href="<?php echo esc_url($url); ?>" tabindex="-1"><span><?php echo esc_html(str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT)); ?></span><strong><?php echo esc_html($label); ?></strong></a>
             <?php endif; ?>
           <?php endforeach; ?>
-          <a class="is-cta" href="<?php echo esc_url(home_url('/services/#quote')); ?>" tabindex="-1"><span>05</span><strong>Start a project</strong><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></a>
+          <a class="is-cta" href="<?php echo esc_url(home_url('/services/')); ?>" tabindex="-1"><span>05</span><strong>Start a project</strong><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></a>
         </div>
       </div>
     </div>

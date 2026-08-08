@@ -173,6 +173,23 @@
   const form = document.querySelector('#luna-quote');
   const result = document.querySelector('#quote-result');
   if (form && result) {
+    const contactMethod = form.querySelector('#quote-contact-method');
+    const emailField = form.querySelector('#quote-email-field');
+    const phoneField = form.querySelector('#quote-phone-field');
+    const emailInput = form.querySelector('#quote-contact-email');
+
+    const phoneInput = form.querySelector('#quote-contact-phone');
+    const syncContactFields = () => {
+      const useEmail = contactMethod?.value === 'email';
+      const usePhone = contactMethod?.value === 'whatsapp';
+      if (emailField) emailField.hidden = !useEmail;
+      if (phoneField) phoneField.hidden = !usePhone;
+      if (emailInput) emailInput.required = useEmail;
+
+      if (phoneInput) phoneInput.required = usePhone;
+    };
+    contactMethod?.addEventListener('change', syncContactFields);
+    syncContactFields();
     form.addEventListener('submit', async event => {
       event.preventDefault();
       const button = form.querySelector('button[type="submit"]');
@@ -180,6 +197,8 @@
       button.firstChild.textContent = 'Calculating…';
       try {
         const payload = Object.fromEntries(new FormData(form).entries());
+        const contactLabels = {email: 'Email', whatsapp: 'WhatsApp'};
+        const contactLabel = contactLabels[payload.contactMethod] || 'your selected method';
         const response = await fetch('/wp-json/luna-labs/v1/quote', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
@@ -191,7 +210,7 @@
         const deposit = Number(data.depositAmount ?? data.deposit ?? total / 2);
         if (!total) throw new Error('Invalid quote');
         result.hidden = false;
-        result.innerHTML = `<small>Estimated total</small><small>Deposit due today</small><strong>€${total.toFixed(0)}</strong><span>€${deposit.toFixed(0)}</span><p>This is an estimate based on your answers. The final price may be adjusted after the description is reviewed.</p>${data.checkoutUrl ? `<a class="lime-button" href="${data.checkoutUrl}">Reserve with the deposit ↗</a>` : ''}`;
+        result.innerHTML = `<small>Estimated total</small><small>Deposit due today</small><strong>€${total.toFixed(0)}</strong><span>€${deposit.toFixed(0)}</span><p>This is an estimate based on your answers. The final price may be adjusted after the description is reviewed.</p><p>Preferred follow-up: ${contactLabel}.</p>${data.checkoutUrl ? `<a class="lime-button" href="${data.checkoutUrl}">Reserve with the deposit ↗</a>` : ''}`;
         result.scrollIntoView({behavior: 'smooth', block: 'nearest'});
       } catch {
         result.hidden = false;
