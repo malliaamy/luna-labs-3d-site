@@ -23,6 +23,6 @@ html body main footer{position:relative!important}
 .dragon-experience.is-ready .model-poster{opacity:0;pointer-events:none}
 .dragon-experience.is-fallback .model-poster{opacity:1}
 
-/* Instant preview without changing the server-rendered React markup. */
+/* Immediate preview without changing the server-rendered React tree. */
 .dragon-canvas{background-image:url("./dragon-tower-01-v2.jpg");background-position:center;background-size:cover;background-repeat:no-repeat}
 .dragon-experience.is-ready .dragon-canvas{background-image:none}
