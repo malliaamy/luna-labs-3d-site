@@ -3,7 +3,7 @@ $home = add_query_arg([
     'desktopAngle' => (float) get_theme_mod('luna_desktop_angle', -5),
     'mobileAngle' => (float) get_theme_mod('luna_mobile_angle', -50),
     'scrollRotation' => (float) get_theme_mod('luna_scroll_rotation', 83),
-], get_template_directory_uri() . '/lab-home/index.html?v=8');
+], get_template_directory_uri() . '/lab-home/index.html?v=10');
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -18,9 +18,41 @@ $home = add_query_arg([
 <script>
 (() => {
   const frame = document.getElementById('luna-home');
+  const wireNavigation = doc => {
+    if (!doc || !doc.documentElement || doc.documentElement.dataset.wpNav) return;
+    doc.documentElement.dataset.wpNav = '1';
+    doc.addEventListener('click', event => {
+      const target = event.target && event.target.nodeType === 1 ? event.target : event.target && event.target.parentElement;
+      const link = target && typeof target.closest === 'function' ? target.closest('a[href]') : null;
+      if (!link) return;
+      const url = new URL(link.getAttribute('href') || link.href, frame.contentWindow.location.href);
+      const routes = {'#work':'/work/','#shop':'/shop/','#commissions':'/services/','#top':'/'};
+      const label = (link.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+      const labelledRoutes = {
+        'about':'/about/',
+        'start a project':'/services/#quote',
+        'build your quote':'/services/#quote',
+        'customize colours in 3d':'/product/dragon-dice-tower/',
+        'see how it was made':'/work/dragon-dice-tower/'
+      };
+      const legacyProduct = /(^|\.)lunalabs3d\.com$/i.test(url.hostname) && url.pathname.startsWith('/product/');
+      if (url.origin !== location.origin && !legacyProduct && !labelledRoutes[label]) return;
+      const destination = labelledRoutes[label] || (url.pathname.endsWith('/lab-home/index.html') ? (routes[url.hash] || '/') : url.pathname + url.search + url.hash);
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      parent.location.assign(destination);
+    }, true);
+  };
+  const navigationPoll = setInterval(() => {
+    try { wireNavigation(frame.contentDocument); } catch (error) {}
+  }, 50);
+  window.addEventListener('pagehide', () => clearInterval(navigationPoll), { once: true });
   frame.addEventListener('load', () => {
     const doc = frame.contentDocument;
     if (!doc) return;
+    if (frame.contentWindow.location.href === 'about:blank') return;
+    clearInterval(navigationPoll);
+    wireNavigation(doc);
         if (!doc.getElementById('luna-shared-footer-css')) {
           var fcss = doc.createElement('link');
           fcss.id = 'luna-shared-footer-css';
@@ -55,27 +87,6 @@ $home = add_query_arg([
           .then(r => r.json())
           .then(c => { cartCount = (c && c.items_count) || 0; paintBadge(); if (doc.body) new MutationObserver(paintBadge).observe(doc.body, { childList: true, subtree: true }); })
           .catch(() => {});
-        if (doc.documentElement.dataset.wpNav) return;
-    doc.documentElement.dataset.wpNav = '1';
-    doc.addEventListener('click', event => {
-      const link = event.target && typeof event.target.closest === 'function' ? event.target.closest('a') : null;
-      if (!link) return;
-      const url = new URL(link.href, location.origin);
-      const routes = {'#work':'/work/','#shop':'/shop/','#commissions':'/services/','#top':'/'};
-      const label = (link.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
-      const labelledRoutes = {
-        'about':'/about/',
-        'start a project':'/services/',
-        'customize colours in 3d':'/product/dragon-dice-tower/',
-        'see how it was made':'/work/dragon-dice-tower/'
-      };
-      const legacyProduct = /(^|\.)lunalabs3d\.com$/i.test(url.hostname) && url.pathname.startsWith('/product/');
-      if (url.origin !== location.origin && !legacyProduct && !labelledRoutes[label]) return;
-      const destination = labelledRoutes[label] || (url.pathname.endsWith('/lab-home/index.html') ? (routes[url.hash] || '/') : url.pathname + url.search + (url.hash === '#quote' ? '' : url.hash));
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      parent.location.assign(destination);
-    }, true);
   });
 })();
 </script>

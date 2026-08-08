@@ -13,7 +13,7 @@
     <div class="footer-links">
       <div><span>Explore</span><a href="<?php echo esc_url(home_url('/work/')); ?>">Work</a><a href="<?php echo esc_url(home_url('/services/')); ?>">Services</a><a href="<?php echo esc_url(home_url('/shop/')); ?>">Shop</a><a href="<?php echo esc_url(home_url('/about/')); ?>">About</a></div>
       <div><span>Customer</span><a href="<?php echo esc_url(home_url('/cart/')); ?>">Cart</a><a href="<?php echo esc_url(home_url('/my-account/')); ?>">Account</a></div>
-      <div><span>Contact</span><a href="mailto:<?php echo esc_attr(get_theme_mod('luna_email', 'lunalabs3d@gmail.com')); ?>"><?php echo esc_html(get_theme_mod('luna_email', 'lunalabs3d@gmail.com')); ?></a><a href="tel:<?php echo esc_attr(get_theme_mod('luna_phone', '+356 7771 8303')); ?>"><?php echo esc_html(get_theme_mod('luna_phone', '+356 7771 8303')); ?></a></div>
+      <div><span>Contact</span><a href="mailto:<?php echo esc_attr(get_theme_mod('luna_email', 'lunalabs3d@gmail.com')); ?>"><?php echo esc_html(get_theme_mod('luna_email', 'lunalabs3d@gmail.com')); ?></a><a href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', (string) get_theme_mod('luna_phone', '+356 7771 8303'))); ?>"><?php echo esc_html(get_theme_mod('luna_phone', '+356 7771 8303')); ?></a></div>
     </div>
   </div>
   <div class="footer-socials" aria-label="Luna Labs social media">
