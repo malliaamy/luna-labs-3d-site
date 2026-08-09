@@ -33,7 +33,7 @@ if (function_exists('is_shop') && (is_shop() || is_product_taxonomy())) {
     </nav>
   </section>
   <section class="product-section" id="products">
-    <div class="page-kicker"><span>Current objects</span><span data-product-count><?php echo esc_html(count($products)); ?> objects</span></div>
+    <div class="page-kicker"><span>Current products</span><span data-product-count><?php echo esc_html(count($products)); ?> products</span></div>
     <div class="product-grid">
       <?php foreach ($products as $index => $product):
           $product_id = $product->get_id();

@@ -18,6 +18,30 @@ $home = add_query_arg([
 <script>
 (() => {
   const frame = document.getElementById('luna-home');
+  const syncPrices = async doc => {
+    const products = {
+      '/product/dragon-dice-tower': 'dragon-dice-tower',
+      '/product/black-gold-dice-set': 'black-gold-dice-set',
+      '/product/chopper-one-piece-figurine-stl': 'chopper-one-piece-figurine-stl'
+    };
+    await Promise.all(Object.entries(products).map(async ([href, slug]) => {
+      try {
+        const response = await fetch('/wp-json/wc/store/v1/products?slug=' + encodeURIComponent(slug), { credentials: 'same-origin' });
+        const [product] = await response.json();
+        const card = doc.querySelector('a[href="' + href + '"], a[href="' + href + '/"]');
+        const price = card && card.querySelector('div > span:last-child');
+        if (!price || !product || !product.prices) return;
+        const minor = Number(product.prices.currency_minor_unit || 2);
+        const amount = href === '/product/dragon-dice-tower' ? 150 : Number(product.prices.price) / Math.pow(10, minor);
+        price.textContent = new Intl.NumberFormat('en-IE', {
+          style: 'currency',
+          currency: product.prices.currency_code || 'EUR',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2
+        }).format(amount);
+      } catch (error) {}
+    }));
+  };
   const wireNavigation = doc => {
     if (!doc || !doc.documentElement || doc.documentElement.dataset.wpNav) return;
     doc.documentElement.dataset.wpNav = '1';
@@ -53,6 +77,9 @@ $home = add_query_arg([
     if (frame.contentWindow.location.href === 'about:blank') return;
     clearInterval(navigationPoll);
     wireNavigation(doc);
+    const dragonPrice = doc.querySelector('a[href="/product/dragon-dice-tower"] div > span:last-child, a[href="/product/dragon-dice-tower/"] div > span:last-child');
+        if (dragonPrice) dragonPrice.textContent = '€150';
+        syncPrices(doc);
         if (!doc.getElementById('luna-shared-footer-css')) {
           var fcss = doc.createElement('link');
           fcss.id = 'luna-shared-footer-css';
