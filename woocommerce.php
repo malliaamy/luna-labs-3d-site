@@ -26,7 +26,7 @@ if (function_exists('is_shop') && (is_shop() || is_product_taxonomy())) {
   </section>
   <section class="shop-category-index">
     <nav class="shop-category-nav" aria-label="Filter shop categories">
-      <button type="button" class="active" data-product-filter="all"><span>00</span><strong>All objects</strong><small>View the complete catalogue</small><i><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></i></button>
+      <button type="button" class="active" data-product-filter="all"><span>00</span><strong>All products</strong><small>View the complete catalogue</small><i><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></i></button>
       <?php if (!is_wp_error($categories)): foreach ($categories as $index => $category): ?>
         <button type="button" data-product-filter="<?php echo esc_attr($category->slug); ?>"><span><?php echo esc_html(str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT)); ?></span><strong><?php echo esc_html($category->name); ?></strong><small><?php echo esc_html($category->description ?: 'Objects from the Luna Labs catalogue'); ?></small><i><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></i></button>
       <?php endforeach; endif; ?>
