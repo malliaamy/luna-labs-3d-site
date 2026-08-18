@@ -1,4 +1,4 @@
-const __vite__mapDeps = (i, m = __vite__mapDeps, d = (m.f || (m.f = ["assets/DragonScene-DoBaBa3M.js?r=3", "assets/rolldown-runtime-S-ySWqyJ.js?r=3", "assets/framework-CXnKph_e.js?r=3", "assets/meshopt_decoder.module-CoX9bj3I.js?r=3", "assets/layout-segment-context-CZkejdeH.js?r=3", "assets/SiteHeader-JJYLRkmE.js?r=3", "assets/UiArrow-DULi32Yj.js?r=3", "assets/link-eY7mD1BO.js?r=3", "assets/ShopCatalogue-DP7nwQR4.js", "assets/content-B9W8E_hg.js", "assets/DiceTowerConfigurator-Wxt2v43A.js", "assets/ProductViewer-CkqepbN-.js", "assets/PortfolioGrid-aG7YtnzG.js", "assets/QuoteCalculator-B6SWtqZn.js"]))) => i.map(i => d[i]);
+const __vite__mapDeps = (i, m = __vite__mapDeps, d = (m.f || (m.f = ["assets/DragonScene-DoBaBa3M.js?r=4", "assets/rolldown-runtime-S-ySWqyJ.js?r=3", "assets/framework-CXnKph_e.js?r=3", "assets/meshopt_decoder.module-CoX9bj3I.js?r=3", "assets/layout-segment-context-CZkejdeH.js?r=3", "assets/SiteHeader-JJYLRkmE.js?r=3", "assets/UiArrow-DULi32Yj.js?r=3", "assets/link-eY7mD1BO.js?r=3", "assets/ShopCatalogue-DP7nwQR4.js", "assets/content-B9W8E_hg.js", "assets/DiceTowerConfigurator-Wxt2v43A.js", "assets/ProductViewer-CkqepbN-.js", "assets/PortfolioGrid-aG7YtnzG.js", "assets/QuoteCalculator-B6SWtqZn.js"]))) => i.map(i => d[i]);
 import {
     n as e,
     r as t,
@@ -3678,7 +3678,7 @@ var _i = `modulepreload`,
     },
     bi = {
         "0e67afa1815e": async () => {
-            let e = await Z(() => import(`./DragonScene-DoBaBa3M.js?r=3`), __vite__mapDeps([0, 1, 2, 3]));
+            let e = await Z(() => import(`./DragonScene-DoBaBa3M.js?r=4`), __vite__mapDeps([0, 1, 2, 3]));
             return {
                 get default() {
                     return e.default
