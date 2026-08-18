@@ -122,8 +122,8 @@ float lunaBase = 1.0 - smoothstep(0.12, 0.22, lunaHeight);
 float lunaCreature = lunaOuter * smoothstep(0.16, 0.35, lunaHeight) * (1.0 - lunaBase);
 
 vec3 lunaCrimson = mix(
-  vec3(0.18, 0.03, 0.32),
-  vec3(0.60, 0.22, 0.82),
+  vec3(0.055, 0.004, 0.16),
+  vec3(0.32, 0.035, 0.70),
   clamp(lunaSurface + 0.18, 0.0, 1.0)
 );
 float lunaGoldMask = smoothstep(
@@ -132,8 +132,8 @@ float lunaGoldMask = smoothstep(
   lunaDetail + lunaHeight * 0.18 + abs(vLunaNormal.z) * 0.14
 );
 vec3 lunaGold = mix(
-  vec3(0.28, 0.08, 0.44),
-  vec3(0.74, 0.42, 0.94),
+  vec3(0.13, 0.006, 0.34),
+  vec3(0.52, 0.10, 0.94),
   lunaSurface
 );
 vec3 lunaCreaturePaint = mix(lunaCrimson, lunaGold, lunaGoldMask);
@@ -232,7 +232,16 @@ function w() {
                 emissiveIntensity: .08,
                 vertexColors: !1
             }),
-            painted: C()
+            painted: new o({
+                color: 8141549,
+                roughness: .5,
+                metalness: .04,
+                clearcoat: .2,
+                clearcoatRoughness: .46,
+                emissive: 1771323,
+                emissiveIntensity: .08,
+                vertexColors: !1
+            })
         };
         w.current = A, x.add(new a(16183524, 1513746, 2.4));
         let M = new m(16765869, 4.8);
@@ -253,6 +262,16 @@ function w() {
             window.clearTimeout(Z);
             let t = e.scene;
             t.rotation.x = 0, t.updateMatrixWorld(!0);
+            [`Head`, `Tail`, `Body`, `Wing1`, `Wing2`].forEach(e => {
+                let n = t.getObjectByName(e);
+                n && n.traverse(e => {
+                    e instanceof y && (e.userData.lunaDragon = !0)
+                })
+            });
+            let d = t.getObjectByName(`Tower 3`);
+            d && d.traverse(e => {
+                e instanceof y && (e.userData.lunaDragon = !1)
+            });
             let i = new u().setFromObject(t),
                 a = i.getSize(new r),
                 o = i.getCenter(new r),
@@ -315,7 +334,7 @@ function w() {
     }, []), (0, b.useEffect)(() => {
         let e = w.current;
         e.resin && n.current.forEach((t, n) => {
-            let r = [4, 5, 6, 8, 9].includes(n);
+            let r = n >= 78 && n <= 138 || n >= 171 && n <= 188;
             t.material = O === `painted` ? r ? e.painted : e.resin : e[O]
         })
     }, [O]), (0, x.jsxs)(`div`, {
