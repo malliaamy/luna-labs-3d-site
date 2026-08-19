@@ -645,3 +645,14 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
   }
   .luna-account-content .woocommerce-MyAccount-navigation a{width:100%;min-width:0;padding-inline:12px}
 }
+
+
+/* WCAG 2.2 mobile target-size improvements. */
+@media (max-width: 767px) {
+  .mobile-menu-trigger { min-height: 44px; }
+  .footer-links a, .footer-bottom a { min-height: 44px; display: inline-flex; align-items: center; }
+}
+
+@media (max-width:767px){.footer-bottom a{min-height:44px!important;padding-block:5px}}
+
+@media (max-width:768px){.footer-links a{min-width:44px}}

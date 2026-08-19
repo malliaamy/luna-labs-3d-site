@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('LUNA_THEME_VERSION', '1.6.22');
+define('LUNA_THEME_VERSION', '1.6.25');
 
 function luna_setup(): void {
     add_theme_support('title-tag');
@@ -150,3 +150,25 @@ function luna_customize_register(WP_Customize_Manager $customizer): void {
 }
 add_action('customize_register', 'luna_customize_register');
 
+
+
+// Security headers for all WordPress responses.
+add_action('send_headers', static function (): void {
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+    header_remove('X-Powered-By');
+});
+
+// Homepage description and social image for the custom embedded landing page.
+add_action('wp_head', static function (): void {
+    if (!is_front_page()) {
+        return;
+    }
+    $social_image = get_template_directory_uri() . '/lab-home/assets/luna-labs-mark.png';
+    echo '<meta name="description" content="Luna Labs 3D is a Malta-based studio creating custom 3D prints, sculpture, painted collectibles and downloadable STL models.">' . "\n";
+    echo '<meta property="og:description" content="Custom 3D printing, sculpture, painted collectibles and downloadable STL models from Malta."><meta property="og:image" content="' . esc_url($social_image) . '">' . "\n";
+    echo '<meta name="twitter:description" content="Custom 3D printing, sculpture, painted collectibles and downloadable STL models from Malta."><meta name="twitter:image" content="' . esc_url($social_image) . '">' . "\n";
+}, 1);

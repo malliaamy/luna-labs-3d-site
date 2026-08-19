@@ -26,3 +26,12 @@ html body main footer{position:relative!important}
 /* Instant preview without changing the server-rendered React markup. */
 .dragon-canvas{background-image:url("./dragon-tower-01-v2.jpg");background-position:center;background-size:cover;background-repeat:no-repeat}
 .dragon-experience.is-ready .dragon-canvas{background-image:none}
+
+@media (max-width:767px){.mobile-menu-trigger{min-height:44px}.footer-links a,.footer-bottom a{min-height:44px;display:inline-flex;align-items:center}}
+
+@media(max-width:767px){.mobile-menu-trigger,.footer-links a,.footer-bottom a{min-height:44px!important}.footer-bottom a{padding-block:5px}}
+
+/* luna-final-touch-targets */
+@media (max-width: 768px){.nav .brand,.finish-picker button,.shop-showcase-heading>a,.shop-mobile-action>a{min-height:44px;display:inline-flex;align-items:center}.footer-links a{min-width:44px;min-height:44px;display:flex;align-items:center}}
+
+@media (max-width:768px){.shop-showcase-heading a{min-height:44px;display:inline-flex;align-items:center}}
