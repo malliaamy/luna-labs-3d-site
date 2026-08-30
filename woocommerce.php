@@ -13,11 +13,11 @@ if (function_exists('is_shop') && (is_shop() || is_product_taxonomy())) {
 ?>
 <div class="shop-page" data-shop-catalogue>
   <section class="shop-page-hero">
-    <div class="page-kicker"><span>Catalogue 03</span><span>Physical and digital objects</span></div>
+    <div class="page-kicker"><span>Shop 03</span><span>Physical and digital objects</span></div>
     <h1>Shop the<span>strange.</span></h1>
     <div class="page-hero-bottom">
       <p>Tabletop pieces, printed objects, stationery and downloadable sculpts—small runs, hand-finished where it matters.</p>
-      <a href="#products">Browse the catalogue <span class="ui-arrow ui-arrow-down" aria-hidden="true"></span></a>
+      <a href="#products">Browse all products <span class="ui-arrow ui-arrow-down" aria-hidden="true"></span></a>
     </div>
     <nav class="shop-customer-links" aria-label="Customer account">
       <a href="<?php echo esc_url(wc_get_cart_url()); ?>"><span>Cart</span><small>Review saved objects</small><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></a>
@@ -26,9 +26,9 @@ if (function_exists('is_shop') && (is_shop() || is_product_taxonomy())) {
   </section>
   <section class="shop-category-index">
     <nav class="shop-category-nav" aria-label="Filter shop categories">
-      <button type="button" class="active" data-product-filter="all"><span>00</span><strong>All products</strong><small>View the complete catalogue</small><i><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></i></button>
+      <button type="button" class="active" data-product-filter="all"><span>00</span><strong>All products</strong><small>View all products</small><i><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></i></button>
       <?php if (!is_wp_error($categories)): foreach ($categories as $index => $category): ?>
-        <button type="button" data-product-filter="<?php echo esc_attr($category->slug); ?>"><span><?php echo esc_html(str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT)); ?></span><strong><?php echo esc_html($category->name); ?></strong><small><?php echo esc_html($category->description ?: 'Objects from the Luna Labs catalogue'); ?></small><i><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></i></button>
+        <button type="button" data-product-filter="<?php echo esc_attr($category->slug); ?>"><span><?php echo esc_html(str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT)); ?></span><strong><?php echo esc_html($category->name); ?></strong><small><?php echo esc_html($category->description ?: 'Objects from the Luna Labs shop'); ?></small><i><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></i></button>
       <?php endforeach; endif; ?>
     </nav>
   </section>
