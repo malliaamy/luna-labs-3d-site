@@ -3,7 +3,7 @@ $home = add_query_arg([
     'desktopAngle' => (float) get_theme_mod('luna_desktop_angle', -5),
     'mobileAngle' => (float) get_theme_mod('luna_mobile_angle', -50),
     'scrollRotation' => (float) get_theme_mod('luna_scroll_rotation', 83),
-], get_template_directory_uri() . '/lab-home/index.html?v=17');
+], get_template_directory_uri() . '/lab-home/index.html?v=18');
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
