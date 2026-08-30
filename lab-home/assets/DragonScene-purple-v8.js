@@ -363,8 +363,8 @@ function w() {
                     y: 0
                 }, E.current.active = !1
             },
-            "aria-label": A === `error` ? `Finished Luna Labs dragon dice tower photograph.` : `Interactive 3D model of the Luna Labs dragon dice tower. Drag to rotate.`,
-            children: [A === `error` && (0, x.jsx)(`img`, {
+            "aria-label": A === `error` ? `Interactive 3D model unavailable.` : `Interactive 3D model of the Luna Labs dragon dice tower. Drag to rotate.`,
+            children: [!1 && (0, x.jsx)(`img`, {
                 className: `model-fallback model-poster`,
                 src: `./assets/dragon-tower-01-v2.jpg`,
                 alt: `Hand-painted Luna Labs dragon dice tower`
@@ -374,7 +374,7 @@ function w() {
                 children: [(0, x.jsx)(`span`, {}), `Preparing the sculpt`]
             }), A === `error` && (0, x.jsx)(`div`, {
                 className: `model-status fallback-note`,
-                children: `Interactive view unavailable · showing finished piece`
+                children: `Interactive view unavailable`
             })]
         }), (0, x.jsxs)(`div`, {
             className: `finish-picker`,

@@ -656,3 +656,13 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
 @media (max-width:767px){.footer-bottom a{min-height:44px!important;padding-block:5px}}
 
 @media (max-width:768px){.footer-links a{min-width:44px}}
+
+
+/* Logged-out account grid fix */
+.luna-account-content > .woocommerce:has(#customer_login){display:block}
+.luna-account-content > .woocommerce:has(#customer_login)::before,
+.luna-account-content > .woocommerce:has(#customer_login)::after,
+.luna-account-content #customer_login::before,
+.luna-account-content #customer_login::after{content:none!important;display:none!important}
+.luna-account-content #customer_login{width:min(100%,1440px);margin-inline:auto;align-items:start}
+@media(max-width:700px){.luna-account-content #customer_login{grid-template-columns:1fr}}
