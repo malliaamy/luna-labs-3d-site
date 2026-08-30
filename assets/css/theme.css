@@ -666,3 +666,4 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
 .luna-account-content #customer_login::after{content:none!important;display:none!important}
 .luna-account-content #customer_login{width:min(100%,1440px);margin-inline:auto;align-items:start}
 @media(max-width:700px){.luna-account-content #customer_login{grid-template-columns:1fr}}
+/* WooCommerce gallery thumbnail containment fix. */ .woocommerce div.product .flex-control-thumbs li{height:clamp(64px,7vw,88px)} .woocommerce div.product .flex-control-thumbs li img{width:100%;height:100%!important;object-fit:contain;object-position:center}
