@@ -192,6 +192,7 @@
     syncContactFields();
     form.addEventListener('submit', async event => {
       event.preventDefault();
+      if (!form.reportValidity()) return;
       const button = form.querySelector('button[type="submit"]');
       button.disabled = true;
       button.firstChild.textContent = 'Calculating…';
@@ -204,7 +205,10 @@
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(payload)
         });
-        if (!response.ok) throw new Error('Quote request failed');
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Quote request failed');
+        }
         const data = await response.json();
         const total = Number(data.totalPrice ?? data.total ?? data.price ?? 0);
         const deposit = Number(data.depositAmount ?? data.deposit ?? total / 2);
@@ -212,9 +216,9 @@
         result.hidden = false;
         result.innerHTML = `<small>Estimated total</small><small>Deposit due today</small><strong>€${total.toFixed(0)}</strong><span>€${deposit.toFixed(0)}</span><p>This is an estimate based on your answers. The final price may be adjusted after the description is reviewed.</p><p>Preferred follow-up: ${contactLabel}.</p>${data.checkoutUrl ? `<a class="lime-button" href="${data.checkoutUrl}">Reserve with the deposit ↗</a>` : ''}`;
         result.scrollIntoView({behavior: 'smooth', block: 'nearest'});
-      } catch {
+      } catch (error) {
         result.hidden = false;
-        result.textContent = 'The price could not be calculated. Please email the studio for a quote.';
+        result.textContent = error?.message || 'The price could not be calculated. Please email the studio for a quote.';
       } finally {
         button.disabled = false;
         button.firstChild.textContent = 'Get instant price';

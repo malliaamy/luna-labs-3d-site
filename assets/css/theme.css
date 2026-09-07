@@ -47,7 +47,15 @@
 .ll-standard-page{background:var(--paper);color:var(--ink);min-height:720px;padding:90px 6vw;max-width:none}
 .ll-standard-page>h1{letter-spacing:-.075em;text-transform:uppercase;font-size:clamp(60px,9vw,140px);line-height:.8}
 .ll-standard-page>p,.ll-standard-page>.entry-content{max-width:850px;line-height:1.8}
-.empty{color:#777970;padding:80px 5.2vw}
+.empty{color:#565850;padding:80px 5.2vw}
+.luna-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+.ll-shop-shell :where(.woocommerce-result-count,.woocommerce-ordering),.ll-standard-page :where(.entry-meta,small){color:#565850}
+.site-header a:focus-visible,.ll-standard-page a:focus-visible,.ll-shop-shell a:focus-visible,.quote-form :focus-visible{outline:3px solid var(--luna);outline-offset:3px}
+.error-404{min-height:70vh;display:grid;align-content:center;gap:24px;background:var(--paper);color:var(--ink);padding:clamp(70px,10vw,150px) 6vw}
+.error-404 .error-code{color:#586048;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.error-404 h1{max-width:980px;font-size:clamp(58px,10vw,150px);letter-spacing:-.075em;line-height:.82;text-transform:uppercase}
+.error-404 p{max-width:650px;color:#494b45;font-size:clamp(16px,2vw,22px);line-height:1.6}
+.error-404-actions{display:flex;flex-wrap:wrap;gap:14px}
 
 @media(max-width:980px){
   .woocommerce ul.products{grid-template-columns:repeat(2,minmax(0,1fr))}

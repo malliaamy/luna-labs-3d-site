@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('LUNA_THEME_VERSION', '1.6.25');
+define('LUNA_THEME_VERSION', '1.7.0');
 
 function luna_setup(): void {
     add_theme_support('title-tag');
@@ -162,13 +162,42 @@ add_action('send_headers', static function (): void {
     header_remove('X-Powered-By');
 });
 
-// Homepage description and social image for the custom embedded landing page.
+// Consistent favicon and social previews across WordPress and the embedded homepage.
 add_action('wp_head', static function (): void {
-    if (!is_front_page()) {
-        return;
-    }
     $social_image = get_template_directory_uri() . '/lab-home/assets/luna-labs-mark.png';
-    echo '<meta name="description" content="Luna Labs 3D is a Malta-based studio creating custom 3D prints, sculpture, painted collectibles and downloadable STL models.">' . "\n";
-    echo '<meta property="og:description" content="Custom 3D printing, sculpture, painted collectibles and downloadable STL models from Malta."><meta property="og:image" content="' . esc_url($social_image) . '">' . "\n";
-    echo '<meta name="twitter:description" content="Custom 3D printing, sculpture, painted collectibles and downloadable STL models from Malta."><meta name="twitter:image" content="' . esc_url($social_image) . '">' . "\n";
+    echo '<link rel="icon" href="' . esc_url($social_image) . '" type="image/png">' . "\n";
+    echo '<link rel="apple-touch-icon" href="' . esc_url($social_image) . '">' . "\n";
+    if (is_front_page()) {
+        echo '<meta name="description" content="Luna Labs 3D is a Malta-based studio creating custom 3D prints, sculpture, painted collectibles and downloadable STL models.">' . "\n";
+        echo '<meta property="og:description" content="Custom 3D printing, sculpture, painted collectibles and downloadable STL models from Malta.">' . "\n";
+        echo '<meta name="twitter:description" content="Custom 3D printing, sculpture, painted collectibles and downloadable STL models from Malta.">' . "\n";
+    }
+    echo '<meta property="og:image" content="' . esc_url($social_image) . '">' . "\n";
+    echo '<meta property="og:image:alt" content="Luna Labs 3D — Sculpt, Print and Paint">' . "\n";
+    echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+    echo '<meta name="twitter:image" content="' . esc_url($social_image) . '">' . "\n";
 }, 1);
+
+// Validate and rate-limit the public quote calculator before its existing REST callback runs.
+add_filter('rest_pre_dispatch', static function ($result, WP_REST_Server $server, WP_REST_Request $request) {
+    if ($request->get_route() !== '/luna-labs/v1/quote' || $request->get_method() !== 'POST') return $result;
+    $data = (array) $request->get_json_params();
+    if (!empty($data['website'])) return new WP_Error('luna_spam', 'Unable to process this request.', ['status' => 400]);
+    $description = trim(sanitize_textarea_field((string) ($data['description'] ?? '')));
+    $method = sanitize_key((string) ($data['contactMethod'] ?? ''));
+    $email = sanitize_email((string) ($data['contactEmail'] ?? ''));
+    $phone = preg_replace('/[^0-9+() .-]/', '', (string) ($data['contactPhone'] ?? ''));
+    if (mb_strlen($description) < 10 || mb_strlen($description) > 2000) return new WP_Error('luna_invalid_description', 'Please provide a description between 10 and 2,000 characters.', ['status' => 400]);
+    if (!in_array($method, ['email', 'whatsapp'], true)) return new WP_Error('luna_invalid_contact', 'Please choose email or WhatsApp.', ['status' => 400]);
+    if ($method === 'email' && !is_email($email)) return new WP_Error('luna_invalid_email', 'Please enter a valid email address.', ['status' => 400]);
+    if ($method === 'whatsapp' && strlen(preg_replace('/\D/', '', $phone)) < 7) return new WP_Error('luna_invalid_phone', 'Please enter a valid WhatsApp number.', ['status' => 400]);
+    $rate_key = 'luna_quote_' . substr(wp_hash((string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown')), 0, 24);
+    $attempts = (int) get_transient($rate_key);
+    if ($attempts >= 20) return new WP_Error('luna_rate_limited', 'Too many requests. Please wait a few minutes and try again.', ['status' => 429]);
+    set_transient($rate_key, $attempts + 1, 5 * MINUTE_IN_SECONDS);
+    $request->set_param('description', $description);
+    $request->set_param('contactMethod', $method);
+    $request->set_param('contactEmail', $email);
+    $request->set_param('contactPhone', $phone);
+    return $result;
+}, 9, 3);
