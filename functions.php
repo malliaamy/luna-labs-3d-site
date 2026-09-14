@@ -201,3 +201,200 @@ add_filter('rest_pre_dispatch', static function ($result, WP_REST_Server $server
     $request->set_param('contactPhone', $phone);
     return $result;
 }, 9, 3);
+
+// Luna Labs vacation mode.
+// Adds WooCommerce > Vacation Mode and closes purchasing while the banner is active.
+
+function luna_vacation_defaults(): array {
+    return [
+        'enabled'     => 0,
+        'message'     => 'We\'re taking a short break. The online shop is temporarily closed, but you\'re welcome to browse.',
+        'reopen_date' => '',
+    ];
+}
+
+function luna_vacation_settings(): array {
+    $saved = get_option('luna_vacation_mode', []);
+    return wp_parse_args(is_array($saved) ? $saved : [], luna_vacation_defaults());
+}
+
+function luna_vacation_is_active(): bool {
+    $settings = luna_vacation_settings();
+    if (empty($settings['enabled'])) return false;
+
+    $reopen_date = (string) $settings['reopen_date'];
+    if ($reopen_date !== '' && current_time('Y-m-d') >= $reopen_date) return false;
+
+    return true;
+}
+
+function luna_vacation_message(): string {
+    $settings = luna_vacation_settings();
+    $message = trim((string) $settings['message']);
+    return $message !== '' ? $message : luna_vacation_defaults()['message'];
+}
+
+function luna_vacation_sanitize($input): array {
+    $defaults = luna_vacation_defaults();
+    $input = is_array($input) ? $input : [];
+    $date = sanitize_text_field((string) ($input['reopen_date'] ?? ''));
+
+    if ($date !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+        $date = '';
+        add_settings_error('luna_vacation_mode', 'luna_vacation_date', 'Please enter a valid reopen date.');
+    }
+
+    return [
+        'enabled'     => empty($input['enabled']) ? 0 : 1,
+        'message'     => sanitize_textarea_field((string) ($input['message'] ?? $defaults['message'])),
+        'reopen_date' => $date,
+    ];
+}
+
+add_action('admin_init', static function (): void {
+    register_setting('luna_vacation_mode', 'luna_vacation_mode', [
+        'type'              => 'array',
+        'sanitize_callback' => 'luna_vacation_sanitize',
+        'default'           => luna_vacation_defaults(),
+    ]);
+});
+
+add_action('admin_menu', static function (): void {
+    add_submenu_page(
+        'woocommerce',
+        'Vacation Mode',
+        'Vacation Mode',
+        'manage_woocommerce',
+        'luna-vacation-mode',
+        'luna_vacation_admin_page'
+    );
+});
+
+function luna_vacation_admin_page(): void {
+    if (!current_user_can('manage_woocommerce')) return;
+    $settings = luna_vacation_settings();
+    $active = luna_vacation_is_active();
+    ?>
+    <div class="wrap">
+        <h1>Vacation Mode</h1>
+        <p>Temporarily close checkout while keeping the catalogue available to browse.</p>
+        <?php settings_errors('luna_vacation_mode'); ?>
+        <div style="max-width:760px;padding:24px;margin-top:20px;background:#fff;border:1px solid #dcdcde;border-left:5px solid <?php echo $active ? '#7c3aed' : '#8c8f94'; ?>;box-shadow:0 1px 2px rgba(0,0,0,.04)">
+            <p style="margin-top:0"><strong>Status:</strong> <?php echo $active ? 'Shop closed — banner visible' : 'Shop open — banner hidden'; ?></p>
+            <form action="options.php" method="post">
+                <?php settings_fields('luna_vacation_mode'); ?>
+                <table class="form-table" role="presentation">
+                    <tr>
+                        <th scope="row">Close the shop</th>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="luna_vacation_mode[enabled]" value="1" <?php checked(!empty($settings['enabled'])); ?>>
+                                Turn on vacation mode
+                            </label>
+                            <p class="description">Customers can browse products, but they cannot add items or check out.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="luna-vacation-message">Banner message</label></th>
+                        <td>
+                            <textarea id="luna-vacation-message" name="luna_vacation_mode[message]" class="large-text" rows="4"><?php echo esc_textarea((string) $settings['message']); ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="luna-vacation-date">Automatically reopen</label></th>
+                        <td>
+                            <input id="luna-vacation-date" type="date" name="luna_vacation_mode[reopen_date]" value="<?php echo esc_attr((string) $settings['reopen_date']); ?>">
+                            <p class="description">Optional. The shop reopens at midnight on this date, using the website timezone.</p>
+                        </td>
+                    </tr>
+                </table>
+                <?php submit_button('Save vacation mode'); ?>
+            </form>
+        </div>
+    </div>
+    <?php
+}
+
+add_action('admin_bar_menu', static function (WP_Admin_Bar $bar): void {
+    if (!current_user_can('manage_woocommerce')) return;
+    $active = luna_vacation_is_active();
+    $bar->add_node([
+        'id'    => 'luna-vacation-mode',
+        'title' => $active ? 'Vacation mode: ON' : 'Vacation mode: off',
+        'href'  => admin_url('admin.php?page=luna-vacation-mode'),
+        'meta'  => ['class' => $active ? 'luna-vacation-on' : 'luna-vacation-off'],
+    ]);
+}, 100);
+
+function luna_vacation_banner(): void {
+    static $rendered = false;
+    if ($rendered || !luna_vacation_is_active()) return;
+    $rendered = true;
+    $settings = luna_vacation_settings();
+    $is_home = is_front_page();
+    ?>
+    <aside class="luna-vacation-banner<?php echo $is_home ? ' is-home' : ''; ?>" aria-label="Shop notice">
+        <span class="luna-vacation-spark" aria-hidden="true">&#10022;</span>
+        <strong>VACATION MODE</strong>
+        <span><?php echo esc_html(luna_vacation_message()); ?></span>
+        <?php if (!empty($settings['reopen_date'])): ?>
+            <span class="luna-vacation-date">Reopening <?php echo esc_html(wp_date(get_option('date_format'), strtotime((string) $settings['reopen_date']))); ?></span>
+        <?php endif; ?>
+        <span class="luna-vacation-spark" aria-hidden="true">&#10022;</span>
+    </aside>
+    <?php if ($is_home): ?><script>document.body.classList.add('luna-vacation-home');</script><?php endif; ?>
+    <?php
+}
+add_action('wp_body_open', 'luna_vacation_banner', 1);
+add_action('wp_footer', 'luna_vacation_banner', 1);
+
+add_action('wp_head', static function (): void {
+    if (!luna_vacation_is_active()) return;
+    ?>
+    <style id="luna-vacation-mode-css">
+        .luna-vacation-banner{position:sticky;top:0;z-index:999999;display:flex;align-items:center;justify-content:center;gap:12px;min-height:48px;padding:10px 24px;box-sizing:border-box;background:#c8ff3d;border-bottom:1px solid rgba(8,9,6,.55);color:#080906;font:700 14px/1.35 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.01em;text-align:center}
+        .luna-vacation-banner strong{color:#080906;font-size:12px;letter-spacing:.16em;white-space:nowrap}
+        .luna-vacation-spark{color:#080906}
+        .luna-vacation-date{padding-left:12px;border-left:1px solid rgba(8,9,6,.35);white-space:nowrap}
+        body:not(.luna-vacation-home) .site-header{top:48px}
+        body.admin-bar .luna-vacation-banner:not(.is-home){top:32px}
+        body.admin-bar:not(.luna-vacation-home) .site-header{top:80px}
+        .luna-vacation-banner.is-home{position:fixed;left:0;right:0;top:0}
+        body.admin-bar .luna-vacation-banner.is-home{top:32px}
+        body.luna-vacation-home #luna-home{height:calc(100% - 48px);margin-top:48px}
+        @media(max-width:782px){body.admin-bar .luna-vacation-banner{top:46px}body.admin-bar:not(.luna-vacation-home) .site-header{top:94px}}
+        @media(max-width:700px){.luna-vacation-banner{flex-wrap:wrap;gap:4px 8px;min-height:58px;padding:9px 14px;font-size:12px}.luna-vacation-banner strong{width:100%;font-size:10px}.luna-vacation-date{padding-left:8px}.luna-vacation-spark{display:none}body:not(.luna-vacation-home) .site-header{top:58px}body.admin-bar:not(.luna-vacation-home) .site-header{top:104px}body.luna-vacation-home #luna-home{height:calc(100% - 58px);margin-top:58px}}
+    </style>
+    <?php
+}, 30);
+
+add_filter('woocommerce_is_purchasable', static function ($purchasable) {
+    return luna_vacation_is_active() ? false : $purchasable;
+}, 100);
+add_filter('woocommerce_variation_is_purchasable', static function ($purchasable) {
+    return luna_vacation_is_active() ? false : $purchasable;
+}, 100);
+
+add_filter('woocommerce_add_to_cart_validation', static function ($valid) {
+    if (!luna_vacation_is_active()) return $valid;
+    wc_add_notice(luna_vacation_message(), 'notice');
+    return false;
+}, 100);
+
+add_action('woocommerce_checkout_process', static function (): void {
+    if (luna_vacation_is_active()) wc_add_notice(luna_vacation_message(), 'error');
+}, 1);
+
+add_filter('woocommerce_order_button_html', static function ($html) {
+    if (!luna_vacation_is_active()) return $html;
+    return '<div class="woocommerce-info">' . esc_html(luna_vacation_message()) . '</div>';
+}, 100);
+
+add_action('template_redirect', static function (): void {
+    if (!luna_vacation_is_active() || is_admin() || wp_doing_ajax()) return;
+    if (function_exists('is_checkout') && is_checkout() && !is_wc_endpoint_url('order-received')) {
+        wc_add_notice(luna_vacation_message(), 'notice');
+        wp_safe_redirect(wc_get_page_permalink('shop'));
+        exit;
+    }
+}, 1);
