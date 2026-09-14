@@ -270,7 +270,7 @@ function U() {
 }
 
 function ne(e) {
-    return e.nodeEnv === `production` && e.prefetch !== !1 && !e.isDangerous
+    return !1
 }
 
 function W(e) {

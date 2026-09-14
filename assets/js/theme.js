@@ -213,8 +213,13 @@
         const total = Number(data.totalPrice ?? data.total ?? data.price ?? 0);
         const deposit = Number(data.depositAmount ?? data.deposit ?? total / 2);
         if (!total) throw new Error('Invalid quote');
+        let checkoutUrl = '';
+        try {
+          const candidate = new URL(data.checkoutUrl || '', window.location.origin);
+          if (candidate.origin === window.location.origin && /^https?:$/.test(candidate.protocol)) checkoutUrl = candidate.href;
+        } catch (error) {}
         result.hidden = false;
-        result.innerHTML = `<small>Estimated total</small><small>Deposit due today</small><strong>€${total.toFixed(0)}</strong><span>€${deposit.toFixed(0)}</span><p>This is an estimate based on your answers. The final price may be adjusted after the description is reviewed.</p><p>Preferred follow-up: ${contactLabel}.</p>${data.checkoutUrl ? `<a class="lime-button" href="${data.checkoutUrl}">Reserve with the deposit ↗</a>` : ''}`;
+        result.innerHTML = `<small>Estimated total</small><small>Deposit due today</small><strong>€${total.toFixed(0)}</strong><span>€${deposit.toFixed(0)}</span><p>This is an estimate based on your answers. The final price may be adjusted after the description is reviewed.</p><p>Preferred follow-up: ${contactLabel}.</p>${checkoutUrl ? `<a class="lime-button" href="${checkoutUrl}">Reserve with the deposit ↗</a>` : ''}`;
         result.scrollIntoView({behavior: 'smooth', block: 'nearest'});
       } catch (error) {
         result.hidden = false;
@@ -232,7 +237,7 @@
 (function () {
   var items = Array.prototype.slice.call(document.querySelectorAll(".product-gallery-item img, .project-gallery img"));
   if (!items.length) return;
-  var box = null, imgEl = null, countEl = null, idx = 0;
+  var box = null, imgEl = null, countEl = null, idx = 0, returnFocus = null;
   function largest(img) {
     var ss = img.getAttribute("srcset"), best = null, bw = -1;
     if (ss) ss.split(",").forEach(function (part) {
@@ -252,6 +257,13 @@
     if (e.key === "Escape") close();
     else if (e.key === "ArrowRight" && items.length > 1) step(1);
     else if (e.key === "ArrowLeft" && items.length > 1) step(-1);
+    else if (e.key === "Tab") {
+      var controls = Array.prototype.slice.call(box.querySelectorAll("button")).filter(function (button) { return !button.disabled; });
+      if (!controls.length) return;
+      var first = controls[0], last = controls[controls.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
   }
   function close() {
     if (!box) return;
@@ -260,13 +272,18 @@
     b.classList.remove("is-open");
     document.body.style.overflow = "";
     setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 200);
+    if (returnFocus) returnFocus.focus();
+    returnFocus = null;
   }
   function open(i) {
     if (box) return;
     idx = i;
+    returnFocus = document.activeElement;
     box = document.createElement("div");
     box.className = "ll-lightbox";
     box.setAttribute("role", "dialog");
+    box.setAttribute("aria-modal", "true");
+    box.setAttribute("aria-label", "Image gallery");
     box.innerHTML = '<button type="button" class="ll-lightbox-close" aria-label="Close">\u2715</button>' +
       (items.length > 1 ? '<button type="button" class="ll-lightbox-nav ll-lightbox-prev" aria-label="Previous">\u2039</button><button type="button" class="ll-lightbox-nav ll-lightbox-next" aria-label="Next">\u203A</button>' : "") +
       '<img alt=""><div class="ll-lightbox-count"></div>';
@@ -276,6 +293,7 @@
     render();
     document.body.style.overflow = "hidden";
     requestAnimationFrame(function () { if (box) box.classList.add("is-open"); });
+    box.querySelector(".ll-lightbox-close").focus();
     box.addEventListener("click", function (e) {
       var t = e.target;
       if (!t || typeof t.closest !== "function") { close(); return; }
@@ -288,6 +306,8 @@
   }
   items.forEach(function (img, i) {
     img.setAttribute("tabindex", "0");
+    img.setAttribute("role", "button");
+    img.setAttribute("aria-label", "Enlarge " + (img.alt || "gallery image") + " (image " + (i + 1) + " of " + items.length + ")");
     img.addEventListener("click", function () { open(i); });
     img.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(i); } });
   });

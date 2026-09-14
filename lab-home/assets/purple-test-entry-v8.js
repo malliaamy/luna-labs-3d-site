@@ -1,4 +1,4 @@
-const __vite__mapDeps = (i, m = __vite__mapDeps, d = (m.f || (m.f = ["assets/DragonScene-purple-v8.js?r=2", "assets/rolldown-runtime-S-ySWqyJ.js?r=3", "assets/framework-CXnKph_e.js?r=3", "assets/meshopt_decoder.module-CoX9bj3I.js?r=3", "assets/layout-segment-context-CZkejdeH.js?r=3", "assets/SiteHeader-JJYLRkmE.js?r=3", "assets/UiArrow-DULi32Yj.js?r=3", "assets/link-eY7mD1BO.js?r=3", "assets/ShopCatalogue-DP7nwQR4.js", "assets/content-B9W8E_hg.js", "assets/DiceTowerConfigurator-Wxt2v43A.js", "assets/ProductViewer-CkqepbN-.js", "assets/PortfolioGrid-aG7YtnzG.js", "assets/QuoteCalculator-B6SWtqZn.js"]))) => i.map(i => d[i]);
+const __vite__mapDeps = (i, m = __vite__mapDeps, d = (m.f || (m.f = ["/wp-content/themes/luna-labs/lab-home/assets/DragonScene-purple-v8.js?r=2", "/wp-content/themes/luna-labs/lab-home/assets/rolldown-runtime-S-ySWqyJ.js?r=3", "/wp-content/themes/luna-labs/lab-home/assets/framework-CXnKph_e.js?r=3", "/wp-content/themes/luna-labs/lab-home/assets/meshopt_decoder.module-CoX9bj3I.js?r=3", "/wp-content/themes/luna-labs/lab-home/assets/layout-segment-context-CZkejdeH.js?r=3", "/wp-content/themes/luna-labs/lab-home/assets/SiteHeader-JJYLRkmE.js?r=3", "/wp-content/themes/luna-labs/lab-home/assets/UiArrow-DULi32Yj.js?r=3", "/wp-content/themes/luna-labs/lab-home/assets/link-eY7mD1BO.js?r=3", "/wp-content/themes/luna-labs/lab-home/assets/ShopCatalogue-DP7nwQR4.js", "/wp-content/themes/luna-labs/lab-home/assets/content-B9W8E_hg.js", "/wp-content/themes/luna-labs/lab-home/assets/DiceTowerConfigurator-Wxt2v43A.js", "/wp-content/themes/luna-labs/lab-home/assets/ProductViewer-CkqepbN-.js", "/wp-content/themes/luna-labs/lab-home/assets/PortfolioGrid-aG7YtnzG.js", "/wp-content/themes/luna-labs/lab-home/assets/QuoteCalculator-B6SWtqZn.js"]))) => i.map(i => d[i]);
 import {
     n as e,
     r as t,
@@ -4315,49 +4315,7 @@ typeof document < `u` && (O({
     ea = !0
 }), window.addEventListener(`pageshow`, () => {
     ea = !1
-}), ca()), window.__VINEXT_LINK_PREFETCH_ROUTES__ = [{
-    patternParts: [],
-    isDynamic: !1
-}, {
-    patternParts: [`about`],
-    isDynamic: !1
-}, {
-    patternParts: [`account`],
-    isDynamic: !1
-}, {
-    patternParts: [`cart`],
-    isDynamic: !1
-}, {
-    patternParts: [`checkout`],
-    isDynamic: !1
-}, {
-    patternParts: [`contact`],
-    isDynamic: !1
-}, {
-    patternParts: [`privacy-policy`],
-    isDynamic: !1
-}, {
-    patternParts: [`product-safety`],
-    isDynamic: !1
-}, {
-    patternParts: [`services`],
-    isDynamic: !1
-}, {
-    patternParts: [`shop`],
-    isDynamic: !1
-}, {
-    patternParts: [`terms-and-conditions`],
-    isDynamic: !1
-}, {
-    patternParts: [`work`],
-    isDynamic: !1
-}, {
-    patternParts: [`product`, `:slug`],
-    isDynamic: !0
-}, {
-    patternParts: [`work`, `:slug`],
-    isDynamic: !0
-}];
+}), ca()), window.__VINEXT_LINK_PREFETCH_ROUTES__ = [];
 export {
     Ze as _, Ct as a, C as b, qt as c, rt as d, et as f, Ye as g, H as h, Mt as i, it as l, Qe as m, bt as n, tn as o, tt as p, ut as r, Dt as s, Z as t, nt as u, V as v, c as x, O as y
 };

@@ -7,6 +7,7 @@
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<a class="skip-link" href="#content"><?php esc_html_e('Skip to content', 'luna-labs'); ?></a>
 <?php
 $work_url = get_post_type_archive_link('ll_work') ?: home_url('/work/');
 $shop_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/shop/');

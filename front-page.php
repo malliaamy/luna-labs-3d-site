@@ -3,7 +3,7 @@ $home = add_query_arg([
     'desktopAngle' => (float) get_theme_mod('luna_desktop_angle', -5),
     'mobileAngle' => (float) get_theme_mod('luna_mobile_angle', -50),
     'scrollRotation' => (float) get_theme_mod('luna_scroll_rotation', 83),
-], get_template_directory_uri() . '/lab-home/index.html?v=18');
+], get_template_directory_uri() . '/lab-home/index.html?v=19');
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -11,10 +11,12 @@ $home = add_query_arg([
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#080906">
   <?php wp_head(); ?>
-  <style>html,body,iframe{width:100%;height:100%;margin:0;border:0}body{overflow:hidden;background:#080906}iframe{display:block}body:has(#wpadminbar) iframe{height:calc(100% - var(--wp-admin--admin-bar--height,32px))}</style>
+  <style>html,body,iframe{width:100%;height:100%;margin:0;border:0}body{overflow:hidden;background:#080906}iframe{display:block}.luna-home-heading{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}body:has(#wpadminbar) iframe{height:calc(100% - var(--wp-admin--admin-bar--height,32px))}</style>
 </head>
-<body>
-<iframe id="luna-home" src="<?php echo esc_url($home); ?>" title="Luna Labs 3D"></iframe>
+<body <?php body_class('luna-home-shell'); ?>>
+<?php wp_body_open(); ?>
+<h1 class="luna-home-heading">Custom 3D prints, sculptures and STL models by Luna Labs 3D in Malta</h1>
+<iframe id="luna-home" src="<?php echo esc_url($home); ?>" title="Luna Labs 3D homepage"></iframe>
 <script>
 (() => {
   const frame = document.getElementById('luna-home');
@@ -110,9 +112,38 @@ $home = add_query_arg([
             if (glyph) trigger.insertBefore(mb, glyph); else trigger.appendChild(mb);
           }
         };
+        const paintFooterPolicies = () => {
+          const groups = Array.prototype.slice.call(doc.querySelectorAll('footer .footer-links > div'));
+          const customer = groups.find(group => {
+            const heading = group.querySelector(':scope > span');
+            return heading && heading.textContent.trim().toLowerCase() === 'customer';
+          });
+          if (!customer || customer.querySelector('[data-luna-policy-link]')) return;
+          [
+            ['Privacy', '/privacy-policy-2/'],
+            ['Terms', '/terms-and-conditions/'],
+            ['Returns', '/returns-and-refund-policy/'],
+            ['Shipping', '/shipping-and-delivery-policy/'],
+            ['Cookies', '/cookie-policy-eu/']
+          ].forEach(([label, href]) => {
+            const link = doc.createElement('a');
+            link.href = href;
+            link.textContent = label;
+            link.dataset.lunaPolicyLink = '1';
+            customer.appendChild(link);
+          });
+        };
+        const paintEnhancements = () => {
+          paintBadge();
+          paintFooterPolicies();
+        };
+        paintEnhancements();
+        if (doc.body && frame.contentWindow.MutationObserver) {
+          new frame.contentWindow.MutationObserver(paintEnhancements).observe(doc.body, { childList: true, subtree: true });
+        }
         fetch('/wp-json/wc/store/v1/cart', { credentials: 'same-origin', cache: 'no-store' })
           .then(r => r.json())
-          .then(c => { cartCount = (c && c.items_count) || 0; paintBadge(); if (doc.body && frame.contentWindow.MutationObserver) new frame.contentWindow.MutationObserver(paintBadge).observe(doc.body, { childList: true, subtree: true }); })
+          .then(c => { cartCount = (c && c.items_count) || 0; paintEnhancements(); })
           .catch(() => {});
   });
 })();

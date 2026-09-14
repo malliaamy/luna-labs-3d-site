@@ -1,4 +1,6 @@
 /* WordPress and WooCommerce integration layered over the recovered prototype CSS. */
+.skip-link{position:fixed;z-index:1000000;top:12px;left:12px;padding:12px 16px;background:var(--luna);color:var(--ink);font-weight:700;transform:translateY(-160%);transition:transform .18s}
+.skip-link:focus{outline:3px solid var(--paper);outline-offset:3px;transform:translateY(0)}
 .site-header{position:sticky;top:0;z-index:100;background:rgba(8,9,6,.96);backdrop-filter:blur(14px)}
 .site-header .brand{position:relative;z-index:60;min-height:48px;padding:4px 8px 4px 0}
 .site-header .brand:after{content:"";position:absolute;inset:-8px -12px}
@@ -50,7 +52,7 @@
 .empty{color:#565850;padding:80px 5.2vw}
 .luna-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
 .ll-shop-shell :where(.woocommerce-result-count,.woocommerce-ordering),.ll-standard-page :where(.entry-meta,small){color:#565850}
-.site-header a:focus-visible,.ll-standard-page a:focus-visible,.ll-shop-shell a:focus-visible,.quote-form :focus-visible{outline:3px solid var(--luna);outline-offset:3px}
+.site-header :where(a,button):focus-visible,.ll-standard-page :where(a,button):focus-visible,.ll-shop-shell :where(a,button,input,select,textarea):focus-visible,.quote-form :focus-visible,.work-page button:focus-visible{outline:3px solid var(--luna);outline-offset:3px}
 .error-404{min-height:70vh;display:grid;align-content:center;gap:24px;background:var(--paper);color:var(--ink);padding:clamp(70px,10vw,150px) 6vw}
 .error-404 .error-code{color:#586048;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
 .error-404 h1{max-width:980px;font-size:clamp(58px,10vw,150px);letter-spacing:-.075em;line-height:.82;text-transform:uppercase}

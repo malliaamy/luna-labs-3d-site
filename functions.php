@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('LUNA_THEME_VERSION', '1.7.0');
+define('LUNA_THEME_VERSION', '1.8.0');
 
 function luna_setup(): void {
     add_theme_support('title-tag');
@@ -177,6 +177,57 @@ add_action('wp_head', static function (): void {
     echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
     echo '<meta name="twitter:image" content="' . esc_url($social_image) . '">' . "\n";
 }, 1);
+
+// Launch-ready SEO fallbacks for pages whose generated metadata is otherwise empty.
+function luna_launch_seo_post_id($args = null): int {
+    if (is_array($args) && !empty($args['id'])) return (int) $args['id'];
+    return (int) get_queried_object_id();
+}
+
+function luna_launch_seo_description($args = null): string {
+    $post_id = luna_launch_seo_post_id($args);
+    if (!$post_id) return '';
+
+    $post = get_post($post_id);
+    if (!$post instanceof WP_Post) return '';
+
+    $descriptions = [
+        'page:cookie-policy-eu' => 'Learn how Luna Labs 3D uses cookies and similar technologies, and review or change your consent preferences.',
+        'll_work:ak-wedding-statue' => 'A personalised wedding statue created by Luna Labs 3D in Malta, from digital sculpting and 3D printing through to the finished keepsake.',
+        'll_work:mines-diorama' => 'A commissioned scale model of the Mines building, 3D printed and hand-finished as a personalised display for the client\'s model cars.',
+    ];
+    $key = $post->post_type . ':' . $post->post_name;
+    return $descriptions[$key] ?? '';
+}
+
+add_filter('the_seo_framework_description_excerpt', static function ($excerpt, $args) {
+    return luna_launch_seo_description($args) ?: $excerpt;
+}, 20, 2);
+
+add_filter('the_seo_framework_title_from_generation', static function ($title, $args) {
+    $post_id = luna_launch_seo_post_id($args);
+    return $post_id && get_post_type($post_id) === 'll_work' && get_post_field('post_name', $post_id) === 'dragon-dice-tower'
+        ? 'Dragon Dice Tower Project'
+        : $title;
+}, 20, 2);
+
+// Preserve the same title and descriptions if the SEO plugin is disabled later.
+add_filter('document_title_parts', static function (array $parts): array {
+    $post_id = get_queried_object_id();
+    if ($post_id && get_post_type($post_id) === 'll_work' && get_post_field('post_name', $post_id) === 'dragon-dice-tower') {
+        $parts['title'] = 'Dragon Dice Tower Project';
+    }
+    return $parts;
+}, 20);
+
+add_action('wp_head', static function (): void {
+    if (function_exists('tsf')) return;
+    $description = luna_launch_seo_description();
+    if (!$description) return;
+    echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+    echo '<meta property="og:description" content="' . esc_attr($description) . '">' . "\n";
+    echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
+}, 2);
 
 // Validate and rate-limit the public quote calculator before its existing REST callback runs.
 add_filter('rest_pre_dispatch', static function ($result, WP_REST_Server $server, WP_REST_Request $request) {
