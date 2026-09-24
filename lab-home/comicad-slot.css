@@ -1,0 +1,35 @@
+.shop-section {
+  padding-bottom: 42px !important;
+}
+
+.comicad-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  margin-top: 28px;
+}
+
+.comicad-frame {
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  height: 118px;
+  border: 0;
+  background: transparent;
+}
+
+@media (max-width: 700px) {
+  .shop-section {
+    padding-bottom: 48px !important;
+  }
+
+  .comicad-slot {
+    min-height: 112px;
+    margin-top: 24px;
+  }
+
+  .comicad-frame {
+    height: 112px;
+  }
+}
