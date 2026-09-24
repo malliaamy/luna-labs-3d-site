@@ -331,7 +331,7 @@ function luna_vacation_admin_page(): void {
         <p>Temporarily close checkout while keeping the catalogue available to browse.</p>
         <?php settings_errors('luna_vacation_mode'); ?>
         <div style="max-width:760px;padding:24px;margin-top:20px;background:#fff;border:1px solid #dcdcde;border-left:5px solid <?php echo $active ? '#7c3aed' : '#8c8f94'; ?>;box-shadow:0 1px 2px rgba(0,0,0,.04)">
-            <p style="margin-top:0"><strong>Status:</strong> <?php echo $active ? 'Shop closed — banner visible' : 'Shop open — banner hidden'; ?></p>
+            <p style="margin-top:0"><strong>Status:</strong> <?php echo $active ? 'Shop closed — banner visible on shop pages' : 'Shop open — banner hidden'; ?></p>
             <form action="options.php" method="post">
                 <?php settings_fields('luna_vacation_mode'); ?>
                 <table class="form-table" role="presentation">
@@ -377,23 +377,30 @@ add_action('admin_bar_menu', static function (WP_Admin_Bar $bar): void {
     ]);
 }, 100);
 
+function luna_vacation_is_shop_page(): bool {
+    if (is_admin()) return false;
+
+    if (function_exists('is_woocommerce') && is_woocommerce()) return true;
+    if (function_exists('is_cart') && is_cart()) return true;
+    if (function_exists('is_checkout') && is_checkout()) return true;
+
+    return false;
+}
+
 function luna_vacation_banner(): void {
     static $rendered = false;
-    if ($rendered || !luna_vacation_is_active()) return;
+    if ($rendered || !luna_vacation_is_active() || !luna_vacation_is_shop_page()) return;
     $rendered = true;
     $settings = luna_vacation_settings();
-    $is_home = is_front_page();
     ?>
-    <aside class="luna-vacation-banner<?php echo $is_home ? ' is-home' : ''; ?>" aria-label="Shop notice">
+    <aside class="luna-vacation-banner" aria-label="Shop notice">
         <span class="luna-vacation-spark" aria-hidden="true">&#10022;</span>
-        <strong>VACATION MODE</strong>
         <span><?php echo esc_html(luna_vacation_message()); ?></span>
         <?php if (!empty($settings['reopen_date'])): ?>
             <span class="luna-vacation-date">Reopening <?php echo esc_html(wp_date(get_option('date_format'), strtotime((string) $settings['reopen_date']))); ?></span>
         <?php endif; ?>
         <span class="luna-vacation-spark" aria-hidden="true">&#10022;</span>
     </aside>
-    <?php if ($is_home): ?><script>document.body.classList.add('luna-vacation-home');</script><?php endif; ?>
     <?php
 }
 add_action('wp_body_open', 'luna_vacation_banner', 1);
@@ -404,17 +411,13 @@ add_action('wp_head', static function (): void {
     ?>
     <style id="luna-vacation-mode-css">
         .luna-vacation-banner{position:sticky;top:0;z-index:999999;display:flex;align-items:center;justify-content:center;gap:12px;min-height:48px;padding:10px 24px;box-sizing:border-box;background:#c8ff3d;border-bottom:1px solid rgba(8,9,6,.55);color:#080906;font:700 14px/1.35 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.01em;text-align:center}
-        .luna-vacation-banner strong{color:#080906;font-size:12px;letter-spacing:.16em;white-space:nowrap}
         .luna-vacation-spark{color:#080906}
         .luna-vacation-date{padding-left:12px;border-left:1px solid rgba(8,9,6,.35);white-space:nowrap}
-        body:not(.luna-vacation-home) .site-header{top:48px}
-        body.admin-bar .luna-vacation-banner:not(.is-home){top:32px}
-        body.admin-bar:not(.luna-vacation-home) .site-header{top:80px}
-        .luna-vacation-banner.is-home{position:fixed;left:0;right:0;top:0}
-        body.admin-bar .luna-vacation-banner.is-home{top:32px}
-        body.luna-vacation-home #luna-home{height:calc(100% - 48px);margin-top:48px}
-        @media(max-width:782px){body.admin-bar .luna-vacation-banner{top:46px}body.admin-bar:not(.luna-vacation-home) .site-header{top:94px}}
-        @media(max-width:700px){.luna-vacation-banner{flex-wrap:wrap;gap:4px 8px;min-height:58px;padding:9px 14px;font-size:12px}.luna-vacation-banner strong{width:100%;font-size:10px}.luna-vacation-date{padding-left:8px}.luna-vacation-spark{display:none}body:not(.luna-vacation-home) .site-header{top:58px}body.admin-bar:not(.luna-vacation-home) .site-header{top:104px}body.luna-vacation-home #luna-home{height:calc(100% - 58px);margin-top:58px}}
+        .site-header{top:48px}
+        body.admin-bar .luna-vacation-banner{top:32px}
+        body.admin-bar .site-header{top:80px}
+        @media(max-width:782px){body.admin-bar .luna-vacation-banner{top:46px}body.admin-bar .site-header{top:94px}}
+        @media(max-width:700px){.luna-vacation-banner{flex-wrap:wrap;gap:4px 8px;min-height:58px;padding:9px 14px;font-size:12px}.luna-vacation-date{padding-left:8px}.luna-vacation-spark{display:none}.site-header{top:58px}body.admin-bar .site-header{top:104px}}
     </style>
     <?php
 }, 30);
