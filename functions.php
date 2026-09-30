@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('LUNA_THEME_VERSION', '1.8.4');
+define('LUNA_THEME_VERSION', '1.8.5');
 define('LUNA_COMMISSION_REQUEST_EMAIL', 'lunalabs3d@gmail.com');
 
 function luna_setup(): void {
@@ -602,3 +602,12 @@ add_action('template_redirect', static function (): void {
         exit;
     }
 }, 1);
+
+
+// Streamline the product-to-checkout flow.
+add_filter('woocommerce_product_single_add_to_cart_text', static function (): string {
+    return 'Buy now — checkout';
+});
+add_filter('woocommerce_add_to_cart_redirect', static function (): string {
+    return wc_get_checkout_url();
+}, 100);

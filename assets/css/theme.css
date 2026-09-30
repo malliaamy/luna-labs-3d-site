@@ -782,3 +782,77 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
   .commission-request-submit{min-height:60px;padding-inline:20px}
   .commission-request-status{padding:24px 20px}
 }
+
+
+/* Malta delivery notice */
+.shop-delivery-notice {
+  min-height: 60px;
+  margin: 0;
+  padding: 12px clamp(20px, 5.2vw, 84px);
+  border: 0;
+  border-top: 1px solid rgba(8, 9, 6, 0.55);
+  border-bottom: 1px solid rgba(8, 9, 6, 0.55);
+  background: var(--luna, #c8ff3d);
+  color: var(--ink, #080906);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+}
+.shop-delivery-notice::before,
+.shop-delivery-notice::after {
+  content: "\2726";
+  flex: 0 0 auto;
+  color: currentColor;
+  font-size: 14px;
+}
+.shop-delivery-notice .page-kicker {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  color: currentColor;
+}
+.shop-delivery-notice .page-kicker span:first-child {
+  display: none;
+}
+.shop-delivery-notice .page-kicker span:last-child {
+  padding-right: 14px;
+  border-right: 1px solid rgba(8, 9, 6, 0.35);
+  color: currentColor;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.shop-delivery-notice p {
+  margin: 0;
+  max-width: none;
+  color: currentColor;
+  font: 700 14px/1.35 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0.01em;
+}
+.shop-delivery-notice strong {
+  color: currentColor;
+  font-weight: 850;
+}
+@media (max-width: 700px) {
+  .shop-delivery-notice {
+    min-height: 70px;
+    padding: 10px 14px;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+  }
+  .shop-delivery-notice::before,
+  .shop-delivery-notice::after {
+    display: none;
+  }
+  .shop-delivery-notice .page-kicker span:last-child {
+    padding-right: 8px;
+    font-size: 10px;
+  }
+  .shop-delivery-notice p {
+    font-size: 12px;
+  }
+}

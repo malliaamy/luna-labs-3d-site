@@ -74,7 +74,7 @@ $colours = [
         </fieldset>
         <div class="tower-order">
           <div><span>Made to order · estimated studio time 1–2 weeks</span><strong><?php echo wp_kses_post($product->get_price_html()); ?></strong></div>
-          <button class="product-buy-button" type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>">Add to cart <span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></button>
+          <button class="product-buy-button" type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>">Buy now — checkout <span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></button>
           <small>Every component colour is saved by name in the cart, order, and order email so the studio receives your exact palette.</small>
         </div>
       </form>

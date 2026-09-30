@@ -24,6 +24,10 @@ if (function_exists('is_shop') && (is_shop() || is_product_taxonomy())) {
       <a href="<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>"><span>Account</span><small>Orders and account access</small><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></a>
     </nav>
   </section>
+  <section class="shop-delivery-notice" aria-label="Delivery information">
+    <div class="page-kicker"><span>Delivery note</span><span>Malta local delivery</span></div>
+    <p><strong>Physical items are delivered locally in Malta only.</strong> STL files remain available as digital downloads.</p>
+  </section>
   <section class="shop-category-index">
     <nav class="shop-category-nav" aria-label="Filter shop categories">
       <button type="button" class="active" data-product-filter="all"><span>00</span><strong>All products</strong><small>View all products</small><i><span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></i></button>
