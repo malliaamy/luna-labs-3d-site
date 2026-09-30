@@ -170,14 +170,6 @@
     }));
   });
 
-  const requestForm = document.querySelector('#luna-commission-request');
-  const requestStatus = document.querySelector('#commission-request-status');
-  const requestEstimate = document.querySelector('#request-estimate');
-  const requestCalculatorSummary = document.querySelector('#request-calculator-summary');
-  const requestEstimateSummary = document.querySelector('#request-estimate-summary');
-  const requestEstimateValue = document.querySelector('#request-estimate-value');
-  let latestEstimate = '';
-  let latestCalculatorSummary = '';
   const form = document.querySelector('#luna-quote');
   const result = document.querySelector('#quote-result');
   if (form && result) {
@@ -221,30 +213,13 @@
         const total = Number(data.totalPrice ?? data.total ?? data.price ?? 0);
         const deposit = Number(data.depositAmount ?? data.deposit ?? total / 2);
         if (!total) throw new Error('Invalid quote');
-        const summary = [
-          `Product: ${form.querySelector('#quote-type')?.selectedOptions[0]?.textContent.trim() || payload.type}`,
-          `Footprint: ${payload.widthCm} × ${payload.depthCm} cm`,
-          `Material: ${form.querySelector('#quote-material')?.selectedOptions[0]?.textContent.trim() || payload.material}`,
-          `Finish: ${form.querySelector('#quote-finish')?.selectedOptions[0]?.textContent.trim() || payload.finish}`,
-          `Detail: ${form.querySelector('#quote-complexity')?.selectedOptions[0]?.textContent.trim() || payload.complexity}`,
-          `Parts: ${payload.parts}; Quantity: ${payload.quantity}`,
-        ].join('\n');
-        latestEstimate = total.toFixed(2);
-        latestCalculatorSummary = summary;
-        if (requestForm) {
-          const requestType = requestForm.querySelector('#request-project-type');
-          const requestDescription = requestForm.querySelector('#request-description');
-          const requestEmail = requestForm.querySelector('#request-email');
-          if (requestType?.querySelector(`option[value="${payload.type}"]`)) requestType.value = payload.type;
-          if (requestDescription) requestDescription.value = payload.description || '';
-          if (requestEmail && payload.contactEmail) requestEmail.value = payload.contactEmail;
-          if (requestEstimate) requestEstimate.value = latestEstimate;
-          if (requestCalculatorSummary) requestCalculatorSummary.value = latestCalculatorSummary;
-          if (requestEstimateSummary) requestEstimateSummary.hidden = false;
-          if (requestEstimateValue) requestEstimateValue.textContent = `€${total.toFixed(0)}`;
-        }
+        let checkoutUrl = '';
+        try {
+          const candidate = new URL(data.checkoutUrl || '', window.location.origin);
+          if (candidate.origin === window.location.origin && /^https?:$/.test(candidate.protocol)) checkoutUrl = candidate.href;
+        } catch (error) {}
         result.hidden = false;
-        result.innerHTML = `<small>Estimated total</small><small>Indicative 50% deposit</small><strong>€${total.toFixed(0)}</strong><span>€${deposit.toFixed(0)}</span><p>This is an estimate, not a confirmed order. The final price may change after the brief is reviewed.</p><p>Preferred follow-up: ${contactLabel}.</p><a class="lime-button" href="#commission-request">Continue to request form ↗</a>`;
+        result.innerHTML = `<small>Estimated total</small><small>Deposit due today</small><strong>€${total.toFixed(0)}</strong><span>€${deposit.toFixed(0)}</span><p>This is an estimate based on your answers. The final price may be adjusted after the description is reviewed.</p><p>Preferred follow-up: ${contactLabel}.</p>${checkoutUrl ? `<a class="lime-button" href="${checkoutUrl}">Reserve with the deposit ↗</a>` : ''}`;
         result.scrollIntoView({behavior: 'smooth', block: 'nearest'});
       } catch (error) {
         result.hidden = false;
@@ -252,57 +227,6 @@
       } finally {
         button.disabled = false;
         button.firstChild.textContent = 'Get instant price';
-      }
-    });
-  }
-
-  if (requestForm && requestStatus) {
-    requestForm.addEventListener('submit', async event => {
-      event.preventDefault();
-      if (!requestForm.reportValidity()) return;
-      const button = requestForm.querySelector('button[type="submit"]');
-      const originalLabel = button.firstChild.textContent;
-      button.disabled = true;
-      button.firstChild.textContent = 'Sending…';
-      requestStatus.hidden = true;
-      requestStatus.classList.remove('is-error', 'is-success');
-      try {
-        const payload = Object.fromEntries(new FormData(requestForm).entries());
-        payload.estimate = latestEstimate || payload.estimate || '';
-        payload.calculatorSummary = latestCalculatorSummary || payload.calculatorSummary || '';
-        const response = await fetch('/wp-json/luna-labs/v1/commission-request', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(payload)
-        });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.message || 'The request could not be sent.');
-
-        requestStatus.replaceChildren();
-        const eyebrow = document.createElement('span');
-        eyebrow.textContent = 'Request received';
-        const heading = document.createElement('strong');
-        heading.textContent = `Thank you. Your reference is ${data.requestId}.`;
-        const message = document.createElement('p');
-        message.textContent = data.clientEmailSent
-          ? 'This is not a confirmed order. We sent you a receipt and Luna Labs will reply after reviewing the brief.'
-          : 'This is not a confirmed order. Luna Labs received the request and will reply after reviewing the brief; the email receipt may be delayed.';
-        requestStatus.append(eyebrow, heading, message);
-        requestStatus.classList.add('is-success');
-        requestStatus.hidden = false;
-        requestForm.reset();
-        latestEstimate = '';
-        latestCalculatorSummary = '';
-        if (requestEstimateSummary) requestEstimateSummary.hidden = true;
-        requestStatus.scrollIntoView({behavior: 'smooth', block: 'center'});
-      } catch (error) {
-        requestStatus.textContent = error?.message || 'The request could not be sent. Please try again or contact Luna Labs directly.';
-        requestStatus.classList.add('is-error');
-        requestStatus.hidden = false;
-        requestStatus.scrollIntoView({behavior: 'smooth', block: 'nearest'});
-      } finally {
-        button.disabled = false;
-        button.firstChild.textContent = originalLabel;
       }
     });
   }

@@ -176,8 +176,6 @@
   const requestCalculatorSummary = document.querySelector('#request-calculator-summary');
   const requestEstimateSummary = document.querySelector('#request-estimate-summary');
   const requestEstimateValue = document.querySelector('#request-estimate-value');
-  let latestEstimate = '';
-  let latestCalculatorSummary = '';
   const form = document.querySelector('#luna-quote');
   const result = document.querySelector('#quote-result');
   if (form && result) {
@@ -229,8 +227,6 @@
           `Detail: ${form.querySelector('#quote-complexity')?.selectedOptions[0]?.textContent.trim() || payload.complexity}`,
           `Parts: ${payload.parts}; Quantity: ${payload.quantity}`,
         ].join('\n');
-        latestEstimate = total.toFixed(2);
-        latestCalculatorSummary = summary;
         if (requestForm) {
           const requestType = requestForm.querySelector('#request-project-type');
           const requestDescription = requestForm.querySelector('#request-description');
@@ -238,8 +234,8 @@
           if (requestType?.querySelector(`option[value="${payload.type}"]`)) requestType.value = payload.type;
           if (requestDescription) requestDescription.value = payload.description || '';
           if (requestEmail && payload.contactEmail) requestEmail.value = payload.contactEmail;
-          if (requestEstimate) requestEstimate.value = latestEstimate;
-          if (requestCalculatorSummary) requestCalculatorSummary.value = latestCalculatorSummary;
+          if (requestEstimate) requestEstimate.value = total.toFixed(2);
+          if (requestCalculatorSummary) requestCalculatorSummary.value = summary;
           if (requestEstimateSummary) requestEstimateSummary.hidden = false;
           if (requestEstimateValue) requestEstimateValue.textContent = `€${total.toFixed(0)}`;
         }
@@ -268,8 +264,6 @@
       requestStatus.classList.remove('is-error', 'is-success');
       try {
         const payload = Object.fromEntries(new FormData(requestForm).entries());
-        payload.estimate = latestEstimate || payload.estimate || '';
-        payload.calculatorSummary = latestCalculatorSummary || payload.calculatorSummary || '';
         const response = await fetch('/wp-json/luna-labs/v1/commission-request', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
@@ -291,8 +285,6 @@
         requestStatus.classList.add('is-success');
         requestStatus.hidden = false;
         requestForm.reset();
-        latestEstimate = '';
-        latestCalculatorSummary = '';
         if (requestEstimateSummary) requestEstimateSummary.hidden = true;
         requestStatus.scrollIntoView({behavior: 'smooth', block: 'center'});
       } catch (error) {

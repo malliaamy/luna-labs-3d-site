@@ -12,7 +12,7 @@
 </section>
 
 <section class="quote-section" id="quote">
-  <div class="quote-heading"><div><p>Commission calculator · Live estimate</p><h2>Price the<span>impossible.</span></h2></div><p>Describe the object, choose how it should be made and receive an instant estimate. A deposit reserves your place in the studio queue.</p></div>
+  <div class="quote-heading"><div><p>Commission calculator · Live estimate</p><h2>Price the<span>impossible.</span></h2></div><p>Describe the object, choose how it should be made and receive an instant estimate. Use the result as a guide, then send a request below. Nothing is booked until Luna Labs confirms it.</p></div>
   <div class="quote-shell">
     <div class="quote-aside" aria-hidden="true"><span>01</span><div class="quote-orbit"><i></i></div><p>Object → material → finish → quote</p></div>
     <form class="quote-form" id="luna-quote">
@@ -31,6 +31,31 @@
       <div class="quote-field quote-field-wide" id="quote-phone-field" hidden><label for="quote-contact-phone">Mobile number</label><input id="quote-contact-phone" name="contactPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+356 7700 0000"><small>Include your country code, especially for WhatsApp.</small></div>
       <button class="quote-submit" type="submit">Get instant price<span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></button>
       <div id="quote-result" class="quote-result" hidden aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
+<section class="commission-request-section" id="commission-request" aria-labelledby="commission-request-title">
+  <div class="commission-request-heading">
+    <div><p>Commission request · Quick form</p><h2 id="commission-request-title">Request your<span>piece.</span></h2></div>
+    <div class="commission-request-notice"><strong>Request only</strong><p>Submitting this form does not confirm an order or reserve a place. Luna Labs will review the brief and reply with availability, final scope, price, timing and any required deposit.</p></div>
+  </div>
+  <div class="commission-request-shell">
+    <div class="commission-request-step" aria-hidden="true"><span>02</span><div class="quote-orbit"><i></i></div><p>Brief → review → confirmation</p></div>
+    <form class="commission-request-form" id="luna-commission-request">
+      <div class="luna-honeypot" aria-hidden="true"><label for="request-website">Leave this field empty</label><input id="request-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="request-field"><label for="request-name">Your name</label><input id="request-name" name="name" type="text" autocomplete="name" minlength="2" maxlength="100" required></div>
+      <div class="request-field"><label for="request-email">Email address</label><input id="request-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="190" required></div>
+      <div class="request-field request-field-wide"><label for="request-project-type">Project type</label><select id="request-project-type" name="projectType" required><option value="">Choose one</option><option value="arch-model">Architectural model</option><option value="scene">Scene / diorama</option><option value="wedding-statue">Wedding statue</option><option value="penholder">Penholder</option><option value="figurine">Figurine</option><option value="dice-tower">Dice tower</option><option value="dice-set">Dice set</option><option value="keychain">Keychain</option><option value="other">Other custom piece</option></select></div>
+      <div class="request-field request-field-wide"><label for="request-description">What would you like made?</label><textarea id="request-description" name="description" rows="5" minlength="20" maxlength="2000" placeholder="Describe the piece, size, finish and the details that matter most." required></textarea></div>
+      <div class="request-field"><label for="request-reference">Reference link <span>optional</span></label><input id="request-reference" name="referenceUrl" type="url" inputmode="url" autocomplete="url" maxlength="500" placeholder="https://"></div>
+      <div class="request-field"><label for="request-deadline">Needed by <span>optional</span></label><input id="request-deadline" name="deadline" type="date"></div>
+      <input id="request-estimate" name="estimate" type="hidden" value="">
+      <input id="request-calculator-summary" name="calculatorSummary" type="hidden" value="">
+      <div class="request-estimate" id="request-estimate-summary" hidden><span>Calculator estimate attached</span><strong id="request-estimate-value"></strong><p>The final quote may change after the brief is reviewed.</p></div>
+      <label class="request-consent"><input name="consent" type="checkbox" value="1" required><span>I agree that Luna Labs may use these details to review and respond to my request. See the <a href="<?php echo esc_url(home_url('/privacy-policy/')); ?>">privacy policy</a>.</span></label>
+      <button class="commission-request-submit" type="submit">Send commission request<span class="ui-arrow ui-arrow-ne" aria-hidden="true"></span></button>
+      <div class="commission-request-status" id="commission-request-status" role="status" aria-live="polite" hidden></div>
     </form>
   </div>
 </section>

@@ -1,7 +1,8 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('LUNA_THEME_VERSION', '1.8.0');
+define('LUNA_THEME_VERSION', '1.8.4');
+define('LUNA_COMMISSION_REQUEST_EMAIL', 'lunalabs3d@gmail.com');
 
 function luna_setup(): void {
     add_theme_support('title-tag');
@@ -252,6 +253,155 @@ add_filter('rest_pre_dispatch', static function ($result, WP_REST_Server $server
     $request->set_param('contactPhone', $phone);
     return $result;
 }, 9, 3);
+
+// Receive commission requests from the Services page and deliver them by email.
+add_action('rest_api_init', static function (): void {
+    register_rest_route('luna-labs/v1', '/commission-request', [
+        'methods'             => WP_REST_Server::CREATABLE,
+        'callback'            => 'luna_submit_commission_request',
+        'permission_callback' => '__return_true',
+    ]);
+});
+
+function luna_submit_commission_request(WP_REST_Request $request) {
+    $data = (array) $request->get_json_params();
+    if (!empty($data['website'])) {
+        return new WP_Error('luna_request_spam', 'Unable to process this request.', ['status' => 400]);
+    }
+
+    $name = trim(sanitize_text_field((string) ($data['name'] ?? '')));
+    $email = sanitize_email((string) ($data['email'] ?? ''));
+    $project_type = sanitize_key((string) ($data['projectType'] ?? ''));
+    $description = trim(sanitize_textarea_field((string) ($data['description'] ?? '')));
+    $reference_input = trim((string) ($data['referenceUrl'] ?? ''));
+    $reference_url = $reference_input === '' ? '' : esc_url_raw($reference_input, ['http', 'https']);
+    $deadline = sanitize_text_field((string) ($data['deadline'] ?? ''));
+    $estimate = is_numeric($data['estimate'] ?? null) ? max(0, round((float) $data['estimate'], 2)) : 0;
+    $calculator_summary = trim(sanitize_textarea_field((string) ($data['calculatorSummary'] ?? '')));
+    $consent = (string) ($data['consent'] ?? '') === '1';
+
+    $project_types = [
+        'arch-model'     => 'Architectural model',
+        'scene'          => 'Scene / diorama',
+        'wedding-statue' => 'Wedding statue',
+        'penholder'      => 'Penholder',
+        'figurine'       => 'Figurine',
+        'dice-tower'     => 'Dice tower',
+        'dice-set'       => 'Dice set',
+        'keychain'       => 'Keychain',
+        'other'          => 'Other custom piece',
+    ];
+
+    if (mb_strlen($name) < 2 || mb_strlen($name) > 100) {
+        return new WP_Error('luna_request_name', 'Please enter your name.', ['status' => 400]);
+    }
+    if (!is_email($email)) {
+        return new WP_Error('luna_request_email', 'Please enter a valid email address.', ['status' => 400]);
+    }
+    if (!isset($project_types[$project_type])) {
+        return new WP_Error('luna_request_type', 'Please choose a project type.', ['status' => 400]);
+    }
+    if (mb_strlen($description) < 20 || mb_strlen($description) > 2000) {
+        return new WP_Error('luna_request_description', 'Please describe the project in at least 20 characters.', ['status' => 400]);
+    }
+    if ($reference_input !== '' && $reference_url === '') {
+        return new WP_Error('luna_request_reference', 'Please enter a valid reference link.', ['status' => 400]);
+    }
+    if ($deadline !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $deadline)) {
+        return new WP_Error('luna_request_deadline', 'Please enter a valid date.', ['status' => 400]);
+    }
+    if (mb_strlen($calculator_summary) > 1000) {
+        return new WP_Error('luna_request_estimate', 'The calculator details are too long.', ['status' => 400]);
+    }
+    if (!$consent) {
+        return new WP_Error('luna_request_consent', 'Please agree to the privacy notice.', ['status' => 400]);
+    }
+
+    $ip_hash = substr(wp_hash((string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown')), 0, 24);
+    $rate_key = 'luna_commission_request_' . $ip_hash;
+    $attempts = (int) get_transient($rate_key);
+    if ($attempts >= 5) {
+        return new WP_Error('luna_request_rate_limited', 'Too many requests. Please wait before trying again.', ['status' => 429]);
+    }
+    set_transient($rate_key, $attempts + 1, HOUR_IN_SECONDS);
+
+    $request_id = 'LL-' . gmdate('ymd') . '-' . strtoupper(wp_generate_password(4, false, false));
+    $project_label = $project_types[$project_type];
+    $calculator_used = $estimate > 0;
+    $deposit_estimate = $calculator_used ? round($estimate / 2, 2) : 0;
+    $owner_subject = sprintf('[Luna Labs] New commission request %s from %s', $request_id, $name);
+    $owner_lines = [
+        'A new commission request was submitted through the Services page.',
+        '',
+        'Request ID: ' . $request_id,
+        'Name: ' . $name,
+        'Email: ' . $email,
+        'Project type: ' . $project_label,
+        'Needed by: ' . ($deadline !== '' ? $deadline : 'Not specified'),
+        'Reference link: ' . ($reference_url !== '' ? $reference_url : 'Not supplied'),
+    ];
+    if ($calculator_used) {
+        $owner_lines[] = 'Calculator total: €' . number_format($estimate, 2);
+        $owner_lines[] = 'Indicative 50% deposit (not paid): €' . number_format($deposit_estimate, 2);
+    }
+    if ($calculator_used && $calculator_summary !== '') {
+        $owner_lines[] = '';
+        $owner_lines[] = 'Calculator details:';
+        $owner_lines[] = $calculator_summary;
+    }
+    $owner_lines[] = '';
+    $owner_lines[] = 'Project brief:';
+    $owner_lines[] = $description;
+    $owner_lines[] = '';
+    $owner_lines[] = 'This is a request only. No order has been confirmed.';
+
+    $reply_name = preg_replace('/[\r\n]+/', ' ', $name);
+    $owner_headers = [
+        'Content-Type: text/plain; charset=UTF-8',
+        sprintf('Reply-To: %s <%s>', $reply_name, $email),
+    ];
+    $owner_sent = wp_mail(LUNA_COMMISSION_REQUEST_EMAIL, $owner_subject, implode("\n", $owner_lines), $owner_headers);
+    if (!$owner_sent) {
+        return new WP_Error('luna_request_mail_failed', 'Your request could not be sent. Please try again or contact Luna Labs directly.', ['status' => 500]);
+    }
+
+    $client_subject = 'We received your Luna Labs commission request';
+    $client_lines = [
+        'Hi ' . $name . ',',
+        '',
+        'Thanks for sending your commission request to Luna Labs. Your request ID is ' . $request_id . '.',
+        '',
+        'This message confirms that the request was received. It is not a confirmed order or booking. Luna Labs will review the brief and reply with availability, final scope, price, timing and any required deposit.',
+        '',
+        'Project type: ' . $project_label,
+        'Needed by: ' . ($deadline !== '' ? $deadline : 'Not specified'),
+    ];
+    if ($calculator_used) {
+        $client_lines[] = 'Calculator total: €' . number_format($estimate, 2);
+        $client_lines[] = 'Indicative 50% deposit (not paid): €' . number_format($deposit_estimate, 2);
+    }
+    $client_lines[] = '';
+    $client_lines[] = 'Your brief:';
+    $client_lines[] = $description;
+    $client_lines[] = '';
+    $client_lines[] = 'Amy Mallia B.A. (Hons.) in Game Art and Visual Design';
+    $client_lines[] = 'Founder / 3D Artist';
+    $client_lines[] = 'Luna Labs';
+    $client_lines[] = home_url('/');
+    $client_body = implode("\n", $client_lines);
+    $client_headers = [
+        'Content-Type: text/plain; charset=UTF-8',
+        'Reply-To: Amy Mallia - Luna Labs <' . LUNA_COMMISSION_REQUEST_EMAIL . '>',
+    ];
+    $client_sent = wp_mail($email, $client_subject, $client_body, $client_headers);
+
+    return new WP_REST_Response([
+        'success'         => true,
+        'requestId'       => $request_id,
+        'clientEmailSent' => (bool) $client_sent,
+        'message'         => 'Request received. This is not a confirmed order.',
+    ], 200, ['Cache-Control' => 'no-store']);
+}
 
 // Luna Labs vacation mode.
 // Adds WooCommerce > Vacation Mode and closes purchasing while the banner is active.
