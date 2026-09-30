@@ -678,19 +678,6 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
 @media(max-width:700px){.luna-account-content #customer_login{grid-template-columns:1fr}}
 /* WooCommerce gallery thumbnail containment fix. */ .woocommerce div.product .flex-control-thumbs li{height:clamp(64px,7vw,88px)} .woocommerce div.product .flex-control-thumbs li img{width:100%;height:100%!important;object-fit:contain;object-position:center}
 
-/* Keep mobile cart-summary content comfortably inset from its frame. */
-@media(max-width:700px){
-  body.woocommerce-cart .wc-block-cart__sidebar .wc-block-components-totals-wrapper{
-    padding-left:20px!important;
-    padding-right:20px!important;
-    box-sizing:border-box
-  }
-  body.woocommerce-cart .wc-block-cart__sidebar .wc-block-cart__submit{
-    padding:20px!important;
-    box-sizing:border-box
-  }
-}
-
 /* Mobile-first commission request form below the Services calculator. */
 .commission-request-section{
   background:var(--paper);color:var(--ink);padding:clamp(82px,9vw,145px) 5.2vw

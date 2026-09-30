@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('LUNA_THEME_VERSION', '1.8.5');
+define('LUNA_THEME_VERSION', '1.8.8');
 define('LUNA_COMMISSION_REQUEST_EMAIL', 'lunalabs3d@gmail.com');
 
 function luna_setup(): void {
@@ -264,7 +264,7 @@ add_action('rest_api_init', static function (): void {
 });
 
 function luna_submit_commission_request(WP_REST_Request $request) {
-    $data = (array) $request->get_json_params();
+    $data = (array) $request->get_params();
     if (!empty($data['website'])) {
         return new WP_Error('luna_request_spam', 'Unable to process this request.', ['status' => 400]);
     }
@@ -317,6 +317,57 @@ function luna_submit_commission_request(WP_REST_Request $request) {
         return new WP_Error('luna_request_consent', 'Please agree to the privacy notice.', ['status' => 400]);
     }
 
+    $reference_upload = (array) (($request->get_file_params()['referenceImages'] ?? []));
+    $reference_paths = [];
+    $reference_names = [];
+    if (!empty($reference_upload['name'])) {
+        $names = is_array($reference_upload['name']) ? $reference_upload['name'] : [$reference_upload['name']];
+        $tmp_names = is_array($reference_upload['tmp_name']) ? $reference_upload['tmp_name'] : [$reference_upload['tmp_name']];
+        $errors = is_array($reference_upload['error']) ? $reference_upload['error'] : [$reference_upload['error']];
+        $sizes = is_array($reference_upload['size']) ? $reference_upload['size'] : [$reference_upload['size']];
+        $types = is_array($reference_upload['type']) ? $reference_upload['type'] : [$reference_upload['type']];
+        $names = array_values(array_filter($names, static fn($value): bool => (string) $value !== ''));
+        if (count($names) > 5) {
+            return new WP_Error('luna_request_images_count', 'Please choose no more than 5 reference images.', ['status' => 400]);
+        }
+        $total_size = array_sum(array_map('intval', $sizes));
+        if ($total_size > 50 * MB_IN_BYTES) {
+            return new WP_Error('luna_request_images_total', 'Reference images must be 50 MB or smaller in total.', ['status' => 400]);
+        }
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        $allowed_mimes = ['jpg|jpeg|jpe' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp'];
+        foreach ($names as $index => $original_name) {
+            $file_size = (int) ($sizes[$index] ?? 0);
+            if (($errors[$index] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+                foreach ($reference_paths as $path) wp_delete_file($path);
+                return new WP_Error('luna_request_image_upload', 'One of the reference images could not be uploaded.', ['status' => 400]);
+            }
+            if ($file_size <= 0 || $file_size > 15 * MB_IN_BYTES) {
+                foreach ($reference_paths as $path) wp_delete_file($path);
+                return new WP_Error('luna_request_image_size', 'Each reference image must be 15 MB or smaller.', ['status' => 400]);
+            }
+            $safe_name = sanitize_file_name((string) $original_name);
+            $checked = wp_check_filetype_and_ext((string) ($tmp_names[$index] ?? ''), $safe_name, $allowed_mimes);
+            if (empty($checked['type']) || !in_array($checked['type'], $allowed_mimes, true)) {
+                foreach ($reference_paths as $path) wp_delete_file($path);
+                return new WP_Error('luna_request_image_type', 'Reference images must be JPG, PNG or WebP files.', ['status' => 400]);
+            }
+            $handled = wp_handle_upload([
+                'name' => $safe_name,
+                'type' => (string) ($types[$index] ?? $checked['type']),
+                'tmp_name' => (string) ($tmp_names[$index] ?? ''),
+                'error' => (int) ($errors[$index] ?? UPLOAD_ERR_NO_FILE),
+                'size' => $file_size,
+            ], ['test_form' => false, 'mimes' => $allowed_mimes]);
+            if (!empty($handled['error']) || empty($handled['file'])) {
+                foreach ($reference_paths as $path) wp_delete_file($path);
+                return new WP_Error('luna_request_image_upload', 'One of the reference images could not be uploaded.', ['status' => 400]);
+            }
+            $reference_paths[] = $handled['file'];
+            $reference_names[] = wp_basename($handled['file']);
+        }
+    }
+
     $ip_hash = substr(wp_hash((string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown')), 0, 24);
     $rate_key = 'luna_commission_request_' . $ip_hash;
     $attempts = (int) get_transient($rate_key);
@@ -339,6 +390,7 @@ function luna_submit_commission_request(WP_REST_Request $request) {
         'Project type: ' . $project_label,
         'Needed by: ' . ($deadline !== '' ? $deadline : 'Not specified'),
         'Reference link: ' . ($reference_url !== '' ? $reference_url : 'Not supplied'),
+        'Reference images: ' . ($reference_names ? implode(', ', $reference_names) . ' (attached)' : 'Not supplied'),
     ];
     if ($calculator_used) {
         $owner_lines[] = 'Calculator total: €' . number_format($estimate, 2);
@@ -360,7 +412,8 @@ function luna_submit_commission_request(WP_REST_Request $request) {
         'Content-Type: text/plain; charset=UTF-8',
         sprintf('Reply-To: %s <%s>', $reply_name, $email),
     ];
-    $owner_sent = wp_mail(LUNA_COMMISSION_REQUEST_EMAIL, $owner_subject, implode("\n", $owner_lines), $owner_headers);
+    $owner_sent = wp_mail(LUNA_COMMISSION_REQUEST_EMAIL, $owner_subject, implode("\n", $owner_lines), $owner_headers, $reference_paths);
+    foreach ($reference_paths as $path) wp_delete_file($path);
     if (!$owner_sent) {
         return new WP_Error('luna_request_mail_failed', 'Your request could not be sent. Please try again or contact Luna Labs directly.', ['status' => 500]);
     }

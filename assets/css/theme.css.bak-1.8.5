@@ -678,19 +678,6 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
 @media(max-width:700px){.luna-account-content #customer_login{grid-template-columns:1fr}}
 /* WooCommerce gallery thumbnail containment fix. */ .woocommerce div.product .flex-control-thumbs li{height:clamp(64px,7vw,88px)} .woocommerce div.product .flex-control-thumbs li img{width:100%;height:100%!important;object-fit:contain;object-position:center}
 
-/* Keep mobile cart-summary content comfortably inset from its frame. */
-@media(max-width:700px){
-  body.woocommerce-cart .wc-block-cart__sidebar .wc-block-components-totals-wrapper{
-    padding-left:20px!important;
-    padding-right:20px!important;
-    box-sizing:border-box
-  }
-  body.woocommerce-cart .wc-block-cart__sidebar .wc-block-cart__submit{
-    padding:20px!important;
-    box-sizing:border-box
-  }
-}
-
 /* Mobile-first commission request form below the Services calculator. */
 .commission-request-section{
   background:var(--paper);color:var(--ink);padding:clamp(82px,9vw,145px) 5.2vw
@@ -734,20 +721,10 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
 }
 .request-field label span{font-weight:500;text-transform:none;letter-spacing:0}
 .request-field input,.request-field select,.request-field textarea{
-  box-sizing:border-box;display:block;width:100%;min-width:0;max-width:100%;min-height:52px;border:1px solid #96948b;background:#f3efe6;color:var(--ink);padding:13px 15px;
+  width:100%;min-height:52px;border:1px solid #96948b;background:#f3efe6;color:var(--ink);padding:13px 15px;
   font-size:16px;line-height:1.4;transition:border-color .18s,box-shadow .18s
 }
 .request-field textarea{min-height:142px;resize:vertical}
-.request-field input[type="file"]{min-height:58px;padding:8px 10px;color:#50524c}
-.request-field input[type="file"]::file-selector-button{
-  min-height:40px;margin:-1px 12px -1px -1px;border:1px solid #777970;background:#e7e3da;color:var(--ink);
-  padding:0 15px;font:inherit;font-weight:700;cursor:pointer
-}
-.request-field>small{display:block;margin-top:10px;color:#5d6058;font-size:12px;line-height:1.5}
-.request-upload-summary{display:block;margin-top:7px;color:#5d6058;font-size:12px;font-weight:650}
-.request-reference-link{margin-top:20px;padding-top:20px;border-top:1px solid #aaa89f}
-.request-reference-link label{margin-bottom:9px}
-.request-deadline input[type="date"]{-webkit-appearance:none;appearance:none}
 .request-field input:focus,.request-field select:focus,.request-field textarea:focus{
   border-color:#628700;box-shadow:0 0 0 3px #c8ff3d66;outline:0
 }
@@ -798,8 +775,6 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
   .commission-request-form{grid-template-columns:1fr}
   .request-field,.request-field:nth-of-type(2n){grid-column:1;border-right:0;padding:20px}
   .request-field input,.request-field select,.request-field textarea{font-size:16px;min-height:54px}
-  .request-field input[type="file"]{min-height:62px;padding:10px}
-  .request-field input[type="file"]::file-selector-button{min-height:42px}
   .request-field textarea{min-height:150px}
   .request-estimate{grid-template-columns:1fr auto;padding:20px}
   .request-estimate strong{font-size:42px}

@@ -176,18 +176,8 @@
   const requestCalculatorSummary = document.querySelector('#request-calculator-summary');
   const requestEstimateSummary = document.querySelector('#request-estimate-summary');
   const requestEstimateValue = document.querySelector('#request-estimate-value');
-  const requestReferenceImages = document.querySelector('#request-reference-images');
-  const requestUploadSummary = document.querySelector('#request-upload-summary');
   let latestEstimate = '';
   let latestCalculatorSummary = '';
-  const syncReferenceImageSummary = () => {
-    if (!requestReferenceImages || !requestUploadSummary) return;
-    const files = [...requestReferenceImages.files];
-    requestUploadSummary.textContent = files.length
-      ? `${files.length} ${files.length === 1 ? 'image' : 'images'} selected: ${files.map(file => file.name).join(', ')}`
-      : 'No images selected';
-  };
-  requestReferenceImages?.addEventListener('change', syncReferenceImageSummary);
   const form = document.querySelector('#luna-quote');
   const result = document.querySelector('#quote-result');
   if (form && result) {
@@ -277,17 +267,13 @@
       requestStatus.hidden = true;
       requestStatus.classList.remove('is-error', 'is-success');
       try {
-        const payload = new FormData(requestForm);
-        const images = payload.getAll('referenceImages[]').filter(file => file instanceof File && file.size > 0);
-        const totalImageBytes = images.reduce((total, file) => total + file.size, 0);
-        if (images.length > 5) throw new Error('Please choose no more than 5 reference images.');
-        if (images.some(file => file.size > 15 * 1024 * 1024)) throw new Error('Each reference image must be 15 MB or smaller.');
-        if (totalImageBytes > 50 * 1024 * 1024) throw new Error('Reference images must be 50 MB or smaller in total.');
-        payload.set('estimate', latestEstimate || payload.get('estimate') || '');
-        payload.set('calculatorSummary', latestCalculatorSummary || payload.get('calculatorSummary') || '');
+        const payload = Object.fromEntries(new FormData(requestForm).entries());
+        payload.estimate = latestEstimate || payload.estimate || '';
+        payload.calculatorSummary = latestCalculatorSummary || payload.calculatorSummary || '';
         const response = await fetch('/wp-json/luna-labs/v1/commission-request', {
           method: 'POST',
-          body: payload
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.message || 'The request could not be sent.');
@@ -305,7 +291,6 @@
         requestStatus.classList.add('is-success');
         requestStatus.hidden = false;
         requestForm.reset();
-        syncReferenceImageSummary();
         latestEstimate = '';
         latestCalculatorSummary = '';
         if (requestEstimateSummary) requestEstimateSummary.hidden = true;

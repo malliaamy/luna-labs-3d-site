@@ -281,8 +281,8 @@
         const images = payload.getAll('referenceImages[]').filter(file => file instanceof File && file.size > 0);
         const totalImageBytes = images.reduce((total, file) => total + file.size, 0);
         if (images.length > 5) throw new Error('Please choose no more than 5 reference images.');
-        if (images.some(file => file.size > 15 * 1024 * 1024)) throw new Error('Each reference image must be 15 MB or smaller.');
-        if (totalImageBytes > 50 * 1024 * 1024) throw new Error('Reference images must be 50 MB or smaller in total.');
+        if (images.some(file => file.size > 4 * 1024 * 1024)) throw new Error('Each reference image must be 4 MB or smaller.');
+        if (totalImageBytes > 10 * 1024 * 1024) throw new Error('Reference images must be 10 MB or smaller in total.');
         payload.set('estimate', latestEstimate || payload.get('estimate') || '');
         payload.set('calculatorSummary', latestCalculatorSummary || payload.get('calculatorSummary') || '');
         const response = await fetch('/wp-json/luna-labs/v1/commission-request', {
