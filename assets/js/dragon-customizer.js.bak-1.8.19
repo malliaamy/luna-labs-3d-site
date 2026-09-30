@@ -27,7 +27,6 @@ if (root && canvasHost) {
     dragon_head: "Red", dragon_tail: "Red", front_wing: "Yellow", back_wing: "Red"
   };
   const selectedColours = {...defaultNames};
-  let selectedAccent = "Gold";
   const partMaterials = {};
 
   const syncInputs = () => Object.entries(selectedColours).forEach(([part, name]) => {
@@ -40,43 +39,14 @@ if (root && canvasHost) {
   syncInputs();
   window.addEventListener("pageshow", syncInputs);
   const orderForm = root.querySelector("form.tower-controls");
-  const accentInput = root.querySelector("[data-dragon-accent-input]");
-  const accentOther = root.querySelector("[data-dragon-accent-other]");
-  const accentOtherInput = accentOther?.querySelector("input");
-  const syncAccentInput = () => {
-    if (!accentInput) return;
-    accentInput.value = selectedAccent;
-    accentInput.setAttribute("value", selectedAccent);
-  };
-  syncAccentInput();
   if (orderForm) {
-    orderForm.addEventListener("submit", () => {
-      syncInputs();
-      syncAccentInput();
-    }, true);
+    orderForm.addEventListener("submit", syncInputs, true);
     orderForm.addEventListener("formdata", event => {
       Object.entries(selectedColours).forEach(([part, name]) => {
         event.formData.set(`luna_dragon_colours[${part}]`, name);
       });
-      event.formData.set("luna_dragon_accent", selectedAccent);
-      if (selectedAccent === "Other" && accentOtherInput) {
-        event.formData.set("luna_dragon_accent_other", accentOtherInput.value);
-      }
     });
   }
-
-  root.querySelectorAll("[data-dragon-accent]").forEach(button => button.addEventListener("click", () => {
-    selectedAccent = button.dataset.dragonAccent;
-    root.querySelectorAll("[data-dragon-accent]").forEach(item => item.classList.toggle("active", item === button));
-    const isOther = selectedAccent === "Other";
-    if (accentOther) accentOther.hidden = !isOther;
-    if (accentOtherInput) {
-      accentOtherInput.disabled = !isOther;
-      accentOtherInput.required = isOther;
-    }
-    syncAccentInput();
-    queueMicrotask(syncAccentInput);
-  }));
 
   const showStatus = (message, isError = false) => {
     if (!status || !status.isConnected) return;

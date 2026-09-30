@@ -130,23 +130,6 @@
 .tower-selection-summary p{color:#6c6e66;margin:5px 0 0;font-size:10px}
 .tower-palette-group button>i{background:var(--swatch)}
 .tower-palette-group button>small{color:#62645d;letter-spacing:.04em;text-transform:uppercase;font-size:6px;white-space:nowrap}
-.tower-accent{border-top:1px solid #b7b5ab;margin-top:34px;padding-top:30px}
-.tower-accent-heading{display:flex;flex-direction:column;gap:8px}
-.tower-accent-heading>span,.tower-accent-other>span{color:#74766f;letter-spacing:.15em;text-transform:uppercase;font-size:7px}
-.tower-accent-heading>strong{letter-spacing:-.035em;text-transform:uppercase;font-size:20px}
-.tower-accent>p{color:#62645d;max-width:560px;margin:13px 0 20px;font-size:11px;line-height:1.55}
-.tower-accent-options{grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;display:grid}
-.tower-accent-options button{border:1px solid #a7a59c;min-height:66px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
-.tower-accent-options button>i{background:var(--accent,#f3efe6);border:1px solid #08090673;border-radius:50%;width:19px;height:19px;display:block}
-.tower-accent-options button[data-dragon-accent="None"]>i{background:linear-gradient(135deg,transparent 45%,#ad2d2d 46% 54%,transparent 55%)}
-.tower-accent-options button[data-dragon-accent="Other"]>i{background:conic-gradient(#d87093,#6d4ca8,#3d7ca6,#3f7a4f,#e2b62d,#d87093)}
-.tower-accent-options button>span{letter-spacing:.07em;text-transform:uppercase;font-size:7px}
-.tower-accent-options button.active{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
-.tower-accent-other{margin-top:14px;display:grid;gap:8px}
-.tower-accent-other[hidden]{display:none}
-.tower-accent-other input{border:1px solid #a7a59c;background:#f8f4eb;min-height:46px;padding:0 13px;font-size:12px}
-.tower-accent>small{color:#777970;margin-top:15px;font-size:9px;line-height:1.45;display:block}
-@media (width<=700px){.tower-accent-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .tower-order .price{color:var(--ink)!important}
 .tower-order .product-buy-button{border:0;width:100%;justify-content:space-between;cursor:pointer;font-weight:800}
 .tower-preview .model-status{z-index:3}

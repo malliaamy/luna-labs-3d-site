@@ -72,26 +72,6 @@ $colour_groups = [
               </div></div>
             <?php endforeach; ?>
           </div>
-          <div class="tower-accent">
-            <div class="tower-accent-heading">
-              <span>Step 03 / Choose a dragon accent</span>
-              <strong>Hand-painted highlights</strong>
-            </div>
-            <p>A finishing colour is lightly painted over the dragon's base colour to bring out scales and details.</p>
-            <div class="tower-accent-options" role="group" aria-label="Dragon accent finish">
-              <button type="button" class="active" data-dragon-accent="Gold" style="--accent:#d4a72c"><i></i><span>Gold</span></button>
-              <button type="button" data-dragon-accent="Silver" style="--accent:#aeb4ba"><i></i><span>Silver</span></button>
-              <button type="button" data-dragon-accent="Copper" style="--accent:#b86b47"><i></i><span>Copper</span></button>
-              <button type="button" data-dragon-accent="None"><i></i><span>No accent</span></button>
-              <button type="button" data-dragon-accent="Other"><i></i><span>Other</span></button>
-            </div>
-            <input type="hidden" name="luna_dragon_accent" value="Gold" data-dragon-accent-input>
-            <label class="tower-accent-other" data-dragon-accent-other hidden>
-              <span>Describe the accent colour</span>
-              <input type="text" name="luna_dragon_accent_other" maxlength="40" placeholder="e.g. Pearl white" disabled>
-            </label>
-            <small>The accent is applied by hand after printing and is not shown in the 3D preview.</small>
-          </div>
         </fieldset>
         <div class="tower-order">
           <div><span>Made to order · estimated studio time 1–2 weeks</span><strong><?php echo wp_kses_post($product->get_price_html()); ?></strong></div>

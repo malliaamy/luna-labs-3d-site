@@ -10,18 +10,20 @@ $parts = [
     'dragon_body' => ['03', 'Dragon body', 'The main creature form', 'Red'],
     'dragon_head' => ['04', 'Dragon head', 'Face, horns and neck', 'Red'],
     'dragon_tail' => ['05', 'Dragon tail', 'The lower wrapped tail', 'Red'],
-    'front_wing' => ['06', 'Front wing', 'The forward-facing wing', 'Yellow'],
+    'front_wing' => ['06', 'Front wing', 'The forward-facing wing', 'Gold'],
     'back_wing' => ['07', 'Back wing', 'The rear wing', 'Red'],
 ];
 $colours = [
     'Black' => '#111315', 'White' => '#f4f1e8', 'Grey' => '#747b82', 'Beige' => '#d8c9aa',
     'Red' => '#b83232', 'Orange' => '#dd6b20', 'Yellow' => '#e2b62d', 'Pink' => '#d87093',
     'Green' => '#3f7a4f', 'Teal' => '#2f7f7a', 'Blue' => '#3d7ca6', 'Purple' => '#6d4ca8',
+    'Gold' => '#d4a72c', 'Copper' => '#b86b47',
 ];
 $colour_groups = [
     'Foundations' => ['Black', 'White', 'Grey', 'Beige'],
     'Warm colours' => ['Red', 'Orange', 'Yellow', 'Pink'],
     'Cool colours' => ['Green', 'Teal', 'Blue', 'Purple'],
+    'Metallic colours' => ['Gold', 'Copper'],
 ];
 ?>
 <article class="product-page dragon-product-page" data-dragon-configurator data-model-url="<?php echo esc_url(get_template_directory_uri() . '/lab-home/assets/dragon-tower-web-v2.glb?v=' . LUNA_THEME_VERSION); ?>" data-fallback-url="<?php echo esc_url(get_template_directory_uri() . '/lab-home/assets/dragon-tower-02.jpg'); ?>">
@@ -71,26 +73,6 @@ $colour_groups = [
                 <?php foreach ($group_colours as $name): $hex = $colours[$name]; ?><button type="button" data-dragon-colour="<?php echo esc_attr($name); ?>" data-colour-hex="<?php echo esc_attr($hex); ?>" aria-label="<?php echo esc_attr($name); ?>" style="--swatch:<?php echo esc_attr($hex); ?>"><i></i><small><?php echo esc_html($name); ?></small></button><?php endforeach; ?>
               </div></div>
             <?php endforeach; ?>
-          </div>
-          <div class="tower-accent">
-            <div class="tower-accent-heading">
-              <span>Step 03 / Choose a dragon accent</span>
-              <strong>Hand-painted highlights</strong>
-            </div>
-            <p>A finishing colour is lightly painted over the dragon's base colour to bring out scales and details.</p>
-            <div class="tower-accent-options" role="group" aria-label="Dragon accent finish">
-              <button type="button" class="active" data-dragon-accent="Gold" style="--accent:#d4a72c"><i></i><span>Gold</span></button>
-              <button type="button" data-dragon-accent="Silver" style="--accent:#aeb4ba"><i></i><span>Silver</span></button>
-              <button type="button" data-dragon-accent="Copper" style="--accent:#b86b47"><i></i><span>Copper</span></button>
-              <button type="button" data-dragon-accent="None"><i></i><span>No accent</span></button>
-              <button type="button" data-dragon-accent="Other"><i></i><span>Other</span></button>
-            </div>
-            <input type="hidden" name="luna_dragon_accent" value="Gold" data-dragon-accent-input>
-            <label class="tower-accent-other" data-dragon-accent-other hidden>
-              <span>Describe the accent colour</span>
-              <input type="text" name="luna_dragon_accent_other" maxlength="40" placeholder="e.g. Pearl white" disabled>
-            </label>
-            <small>The accent is applied by hand after printing and is not shown in the 3D preview.</small>
           </div>
         </fieldset>
         <div class="tower-order">

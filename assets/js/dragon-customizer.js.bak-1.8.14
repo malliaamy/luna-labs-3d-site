@@ -19,64 +19,19 @@ const canvasHost = root ? root.querySelector("[data-dragon-canvas]") : null;
 if (root && canvasHost) {
   const status = root.querySelector("[data-dragon-status]");
   const defaults = {
-    dice_tray: "#111315", stone_tower: "#747b82", dragon_body: "#b83232",
-    dragon_head: "#b83232", dragon_tail: "#b83232", front_wing: "#e2b62d", back_wing: "#b83232"
+    dice_tray: "#272c30", stone_tower: "#5b6168", dragon_body: "#ad2d2d",
+    dragon_head: "#ad2d2d", dragon_tail: "#ad2d2d", front_wing: "#ba7c26", back_wing: "#c23c3c"
   };
   const defaultNames = {
-    dice_tray: "Black", stone_tower: "Grey", dragon_body: "Red",
-    dragon_head: "Red", dragon_tail: "Red", front_wing: "Yellow", back_wing: "Red"
+    dice_tray: "Charcoal", stone_tower: "Granite", dragon_body: "Crimson",
+    dragon_head: "Crimson", dragon_tail: "Crimson", front_wing: "Ochre", back_wing: "Ruby"
   };
-  const selectedColours = {...defaultNames};
-  let selectedAccent = "Gold";
   const partMaterials = {};
 
-  const syncInputs = () => Object.entries(selectedColours).forEach(([part, name]) => {
+  Object.entries(defaultNames).forEach(([part, name]) => {
     const input = root.querySelector(`[data-dragon-input="${part}"]`);
-    if (!input) return;
-    input.value = name;
-    input.setAttribute("value", name);
+    if (input) input.value = name;
   });
-
-  syncInputs();
-  window.addEventListener("pageshow", syncInputs);
-  const orderForm = root.querySelector("form.tower-controls");
-  const accentInput = root.querySelector("[data-dragon-accent-input]");
-  const accentOther = root.querySelector("[data-dragon-accent-other]");
-  const accentOtherInput = accentOther?.querySelector("input");
-  const syncAccentInput = () => {
-    if (!accentInput) return;
-    accentInput.value = selectedAccent;
-    accentInput.setAttribute("value", selectedAccent);
-  };
-  syncAccentInput();
-  if (orderForm) {
-    orderForm.addEventListener("submit", () => {
-      syncInputs();
-      syncAccentInput();
-    }, true);
-    orderForm.addEventListener("formdata", event => {
-      Object.entries(selectedColours).forEach(([part, name]) => {
-        event.formData.set(`luna_dragon_colours[${part}]`, name);
-      });
-      event.formData.set("luna_dragon_accent", selectedAccent);
-      if (selectedAccent === "Other" && accentOtherInput) {
-        event.formData.set("luna_dragon_accent_other", accentOtherInput.value);
-      }
-    });
-  }
-
-  root.querySelectorAll("[data-dragon-accent]").forEach(button => button.addEventListener("click", () => {
-    selectedAccent = button.dataset.dragonAccent;
-    root.querySelectorAll("[data-dragon-accent]").forEach(item => item.classList.toggle("active", item === button));
-    const isOther = selectedAccent === "Other";
-    if (accentOther) accentOther.hidden = !isOther;
-    if (accentOtherInput) {
-      accentOtherInput.disabled = !isOther;
-      accentOtherInput.required = isOther;
-    }
-    syncAccentInput();
-    queueMicrotask(syncAccentInput);
-  }));
 
   const showStatus = (message, isError = false) => {
     if (!status || !status.isConnected) return;
@@ -119,7 +74,8 @@ if (root && canvasHost) {
     root.querySelector("[data-selected-description]").textContent = button.querySelector("small").textContent;
     const swatch = root.querySelector(`[data-part-swatch="${selectedPart}"]`);
     root.querySelector("[data-selected-swatch]").style.background = swatch.style.background;
-    const colourButton = [...root.querySelectorAll("[data-dragon-colour]")].find(item => item.dataset.dragonColour === selectedColours[selectedPart]);
+    const input = root.querySelector(`[data-dragon-input="${selectedPart}"]`);
+    const colourButton = [...root.querySelectorAll("[data-dragon-colour]")].find(item => item.dataset.dragonColour === input?.value);
     if (colourButton) {
       root.querySelector("[data-colour-name]").textContent = colourButton.dataset.dragonColour;
       root.querySelector("[data-colour-swatch]").style.background = colourButton.dataset.colourHex;
@@ -132,9 +88,8 @@ if (root && canvasHost) {
     const name = button.dataset.dragonColour;
     const hex = button.dataset.colourHex;
     materialFor(selectedPart).color.set(hex);
-    selectedColours[selectedPart] = name;
-    syncInputs();
-    queueMicrotask(syncInputs);
+    const input = root.querySelector(`[data-dragon-input="${selectedPart}"]`);
+    if (input) input.value = name;
     root.querySelector(`[data-part-swatch="${selectedPart}"]`).style.background = hex;
     root.querySelector("[data-selected-swatch]").style.background = hex;
     root.querySelector("[data-colour-name]").textContent = name;
