@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('LUNA_THEME_VERSION', '1.8.20');
+define('LUNA_THEME_VERSION', '1.8.21');
 define('LUNA_COMMISSION_REQUEST_EMAIL', 'lunalabs3d@gmail.com');
 
 function luna_setup(): void {

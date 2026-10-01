@@ -151,17 +151,17 @@ if (root && canvasHost) {
     if (value.includes("body")) return "dragon_body";
     if (value.includes("base") || value.includes("stairs")) return "dice_tray";
     if (value.includes("tower")) return "stone_tower";
-    return null;
+    return "stone_tower";
   };
 
   const partForObject = (object, modelRoot) => {
+    const names = [];
     let current = object;
     while (current && current !== modelRoot) {
-      const part = mapName(current.name);
-      if (part) return part;
+      if (current.name) names.push(current.name);
       current = current.parent;
     }
-    return "stone_tower";
+    return mapName(names.join(" "));
   };
 
   try {
