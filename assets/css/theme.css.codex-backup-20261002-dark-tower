@@ -499,10 +499,9 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
 }
 
 
-/* Keep the Back to shop control left aligned and vertically balanced. */
+/* Keep the Back to shop control left aligned and vertically balanced above the divider. */
 .dragon-product-page .product-back-row {
   display: flex;
-  border-bottom: 0;
   margin-bottom: 0;
   justify-content: space-between;
   padding: 12px 5.2vw;
@@ -941,44 +940,6 @@ body.woocommerce-checkout .wp-block-woocommerce-checkout-order-summary-block .wc
     font-size: 12px;
   }
 }
-
-/* Dice Tower: match the studio commission form's dark treatment. */
-.dragon-product-page{
-  background:radial-gradient(ellipse at 18% 35%,#9d78ff1f,transparent 30%),var(--ink);
-  color:var(--paper)
-}
-.dragon-product-page .tower-heading-outline{display:block;color:transparent;-webkit-text-stroke:1px #f3efe694}
-.dragon-product-page :is(.product-back-row,.tower-configurator-layout,.tower-preview,.tower-controls-intro,.tower-part-list,.tower-part-list button,.tower-colours,.tower-palette-heading,.tower-accent,.product-story){border-color:#ffffff2e}
-.dragon-product-page .product-back-link{color:var(--paper);border-color:#ffffff40}
-.dragon-product-page .product-back-link:hover{background:var(--luna);color:var(--ink);border-color:var(--luna)}
-.dragon-product-page :is(.product-back-row>span,.page-kicker,.tower-controls-intro>span,.tower-colours legend,.tower-selection-summary small,.tower-palette-heading span,.tower-palette-group>span,.tower-accent-heading>span,.tower-accent-other>span,.product-story-kicker){color:#a2a49b}
-.dragon-product-page :is(.tower-configurator-heading>p,.tower-selection-summary p,.tower-accent>p,.tower-accent>small,.tower-order>small,.product-description){color:#b2b3aa}
-.dragon-product-page .tower-configurator-layout{background:#0d0f0b}
-.dragon-product-page .tower-controls{background:#10120e;color:var(--paper)}
-.dragon-product-page .tower-part-list button{color:var(--paper)}
-.dragon-product-page .tower-part-list button>span{color:inherit}
-.dragon-product-page .tower-part-name small{color:#a2a49b}
-.dragon-product-page .tower-part-list button:hover{background:#1c2015}
-.dragon-product-page .tower-part-list button.active{background:#202817;box-shadow:inset 3px 0 0 var(--luna)}
-.dragon-product-page :is(.tower-selection-summary>i,.tower-palette-heading>i,.tower-part-list button i){border-color:#ffffff50;box-shadow:inset 0 0 0 3px #10120e}
-.dragon-product-page .tower-palette-group i{border-color:#ffffff40}
-.dragon-product-page .tower-palette-group button>small{color:#c0c1b8}
-.dragon-product-page .tower-palette-group button:hover{background:#23271d}
-.dragon-product-page .tower-palette-group button.active{background:#232d19;border-color:var(--luna)}
-.dragon-product-page .tower-accent-options button{border-color:#ffffff30;color:var(--paper);background:#12140f}
-.dragon-product-page .tower-accent-options button:hover{background:#23271d}
-.dragon-product-page .tower-accent-options button.active{border-color:var(--luna);box-shadow:inset 0 0 0 1px var(--luna)}
-.dragon-product-page .tower-accent-options button>i{border-color:#ffffff50}
-.dragon-product-page .tower-accent-other input{background:#12140f;color:var(--paper);border-color:#ffffff40}
-.dragon-product-page .tower-order .price{color:var(--paper)!important}
-.dragon-product-page .product-buy-button{background:var(--luna);color:var(--ink)}
-.dragon-product-page .product-buy-button:hover{background:#dcff83}
-.dragon-product-page .dragon-product-notices{background:transparent;color:var(--paper)}
-.dragon-product-page :is(.woocommerce-message,.woocommerce-info){background:#161c10;color:var(--paper);border-top-color:var(--luna)}
-.dragon-product-page .woocommerce-message::before{color:var(--luna)}
-.dragon-product-page .woocommerce-error{background:#291611;color:#ffe2da}
-.dragon-product-page .woocommerce-message .button{background:var(--luna);color:var(--ink)}
-.dragon-product-page :is(button,a,input):focus-visible{outline:2px solid var(--luna);outline-offset:3px}
 
 /* The calculator is archived for later; keep its dark, atmospheric treatment
    on the request form while quotes are handled manually. */

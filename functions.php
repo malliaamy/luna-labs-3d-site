@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-define('LUNA_THEME_VERSION', '1.8.21');
+define('LUNA_THEME_VERSION', '1.8.27');
 define('LUNA_COMMISSION_REQUEST_EMAIL', 'lunalabs3d@gmail.com');
 
 function luna_setup(): void {
@@ -233,6 +233,8 @@ add_action('wp_head', static function (): void {
 // Validate and rate-limit the public quote calculator before its existing REST callback runs.
 add_filter('rest_pre_dispatch', static function ($result, WP_REST_Server $server, WP_REST_Request $request) {
     if ($request->get_route() !== '/luna-labs/v1/quote' || $request->get_method() !== 'POST') return $result;
+    // Paused while commissions are reviewed and priced by the studio.
+    return new WP_Error('luna_quote_paused', 'Please send a commission request for a tailored quote.', ['status' => 410]);
     $data = (array) $request->get_json_params();
     if (!empty($data['website'])) return new WP_Error('luna_spam', 'Unable to process this request.', ['status' => 400]);
     $description = trim(sanitize_textarea_field((string) ($data['description'] ?? '')));

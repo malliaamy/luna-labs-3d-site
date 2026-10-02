@@ -24,21 +24,21 @@ $colour_groups = [
     'Cool colours' => ['Green', 'Teal', 'Blue', 'Purple'],
 ];
 ?>
+<?php if (wc_notice_count() > 0): ?>
+  <div class="dragon-product-notices">
+    <?php woocommerce_output_all_notices(); ?>
+  </div>
+<?php endif; ?>
 <article class="product-page dragon-product-page" data-dragon-configurator data-model-url="<?php echo esc_url(get_template_directory_uri() . '/lab-home/assets/dragon-tower-web-v2.glb?v=' . LUNA_THEME_VERSION); ?>" data-fallback-url="<?php echo esc_url(get_template_directory_uri() . '/lab-home/assets/dragon-tower-02.jpg'); ?>">
   <div class="product-back-row">
     <a class="product-back-link" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">← Back to shop</a>
     <span>DnD / Dragon Dice Tower</span>
   </div>
 
-  <?php if (wc_notice_count() > 0): ?>
-    <div class="dragon-product-notices">
-      <?php woocommerce_output_all_notices(); ?>
-    </div>
-  <?php endif; ?>
-
   <section class="tower-configurator">
     <div class="tower-configurator-heading">
-      <h1>Build your <span class="tower-heading-outline">Dragon Dice Tower.</span></h1>
+      <div class="page-kicker"><span>Customizable tabletop object</span><span>Live colour preview</span></div>
+      <h1>Build your Dragon Dice Tower.</h1>
       <p>Choose a colour for each printed component, rotate the assembled tower, and add your finished palette to the order.</p>
     </div>
 

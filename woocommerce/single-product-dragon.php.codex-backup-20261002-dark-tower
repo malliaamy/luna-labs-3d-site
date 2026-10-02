@@ -38,7 +38,8 @@ $colour_groups = [
 
   <section class="tower-configurator">
     <div class="tower-configurator-heading">
-      <h1>Build your <span class="tower-heading-outline">Dragon Dice Tower.</span></h1>
+      <div class="page-kicker"><span>Customizable tabletop object</span><span>Live colour preview</span></div>
+      <h1>Build your Dragon Dice Tower.</h1>
       <p>Choose a colour for each printed component, rotate the assembled tower, and add your finished palette to the order.</p>
     </div>
 

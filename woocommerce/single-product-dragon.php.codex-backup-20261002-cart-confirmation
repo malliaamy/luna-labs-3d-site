@@ -30,15 +30,10 @@ $colour_groups = [
     <span>DnD / Dragon Dice Tower</span>
   </div>
 
-  <?php if (wc_notice_count() > 0): ?>
-    <div class="dragon-product-notices">
-      <?php woocommerce_output_all_notices(); ?>
-    </div>
-  <?php endif; ?>
-
   <section class="tower-configurator">
     <div class="tower-configurator-heading">
-      <h1>Build your <span class="tower-heading-outline">Dragon Dice Tower.</span></h1>
+      <div class="page-kicker"><span>Customizable tabletop object</span><span>Live colour preview</span></div>
+      <h1>Build your Dragon Dice Tower.</h1>
       <p>Choose a colour for each printed component, rotate the assembled tower, and add your finished palette to the order.</p>
     </div>
 

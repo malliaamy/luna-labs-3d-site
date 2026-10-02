@@ -499,10 +499,9 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
 }
 
 
-/* Keep the Back to shop control left aligned and vertically balanced. */
+/* Keep the Back to shop control left aligned and vertically balanced above the divider. */
 .dragon-product-page .product-back-row {
   display: flex;
-  border-bottom: 0;
   margin-bottom: 0;
   justify-content: space-between;
   padding: 12px 5.2vw;

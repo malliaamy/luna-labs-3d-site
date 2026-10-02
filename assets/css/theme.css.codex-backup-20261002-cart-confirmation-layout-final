@@ -122,9 +122,8 @@
 .dragon-product-page{background:var(--paper);color:var(--ink)}
 .dragon-product-notices{
   background:var(--paper);color:var(--ink);
-  padding:20px max(5.2vw,calc((100vw - 1280px)/2)) 0
+  padding:28px max(5.2vw,calc((100vw - 1280px)/2)) 0
 }
-.dragon-product-notices :where(.woocommerce-message,.woocommerce-info,.woocommerce-error){margin-bottom:0}
 .dragon-product-page .product-back-row{padding:24px 5.2vw 0}
 .dragon-product-page .tower-configurator{padding:42px 5.2vw 0}
 .tower-selection-summary{display:grid;grid-template-columns:56px 1fr;align-items:center;gap:18px;margin-top:26px}
@@ -399,7 +398,7 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
   .portfolio-toolbar{top:71px}
   .portfolio-filters{padding-bottom:2px}
   .dragon-product-page .product-back-row{padding:20px 20px 0}
-  .dragon-product-notices{padding:16px 14px 0}
+  .dragon-product-notices{padding:24px 14px 0}
   .dragon-product-page .tower-configurator{padding:34px 20px 0}
   .tower-selection-summary{grid-template-columns:48px 1fr}
   .woocommerce-page .nav{padding-left:14px;padding-right:14px}
@@ -499,11 +498,9 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
 }
 
 
-/* Keep the Back to shop control left aligned and vertically balanced. */
+/* Keep the Back to shop control left aligned and vertically balanced above the divider. */
 .dragon-product-page .product-back-row {
   display: flex;
-  border-bottom: 0;
-  margin-bottom: 0;
   justify-content: space-between;
   padding: 12px 5.2vw;
 }
@@ -520,14 +517,6 @@ body.woocommerce-cart .ll-standard-page>h1{color:var(--paper)}
 
 
 /* Mobile product-story spacing and account layout containment. */
-.dragon-product-page .tower-configurator{padding-top:28px}
-.dragon-product-page .tower-configurator-heading{row-gap:28px}
-.dragon-product-page .tower-configurator-heading h1{margin-top:0}
-@media(max-width:700px){
-  .dragon-product-page .tower-configurator{padding-top:24px}
-  .dragon-product-page .tower-configurator-heading{row-gap:24px}
-}
-
 @media (max-width:700px){
   .single-product .product-story-kicker,
   .single-product .product-story-grid{
@@ -940,120 +929,4 @@ body.woocommerce-checkout .wp-block-woocommerce-checkout-order-summary-block .wc
   .shop-delivery-notice p {
     font-size: 12px;
   }
-}
-
-/* Dice Tower: match the studio commission form's dark treatment. */
-.dragon-product-page{
-  background:radial-gradient(ellipse at 18% 35%,#9d78ff1f,transparent 30%),var(--ink);
-  color:var(--paper)
-}
-.dragon-product-page .tower-heading-outline{display:block;color:transparent;-webkit-text-stroke:1px #f3efe694}
-.dragon-product-page :is(.product-back-row,.tower-configurator-layout,.tower-preview,.tower-controls-intro,.tower-part-list,.tower-part-list button,.tower-colours,.tower-palette-heading,.tower-accent,.product-story){border-color:#ffffff2e}
-.dragon-product-page .product-back-link{color:var(--paper);border-color:#ffffff40}
-.dragon-product-page .product-back-link:hover{background:var(--luna);color:var(--ink);border-color:var(--luna)}
-.dragon-product-page :is(.product-back-row>span,.page-kicker,.tower-controls-intro>span,.tower-colours legend,.tower-selection-summary small,.tower-palette-heading span,.tower-palette-group>span,.tower-accent-heading>span,.tower-accent-other>span,.product-story-kicker){color:#a2a49b}
-.dragon-product-page :is(.tower-configurator-heading>p,.tower-selection-summary p,.tower-accent>p,.tower-accent>small,.tower-order>small,.product-description){color:#b2b3aa}
-.dragon-product-page .tower-configurator-layout{background:#0d0f0b}
-.dragon-product-page .tower-controls{background:#10120e;color:var(--paper)}
-.dragon-product-page .tower-part-list button{color:var(--paper)}
-.dragon-product-page .tower-part-list button>span{color:inherit}
-.dragon-product-page .tower-part-name small{color:#a2a49b}
-.dragon-product-page .tower-part-list button:hover{background:#1c2015}
-.dragon-product-page .tower-part-list button.active{background:#202817;box-shadow:inset 3px 0 0 var(--luna)}
-.dragon-product-page :is(.tower-selection-summary>i,.tower-palette-heading>i,.tower-part-list button i){border-color:#ffffff50;box-shadow:inset 0 0 0 3px #10120e}
-.dragon-product-page .tower-palette-group i{border-color:#ffffff40}
-.dragon-product-page .tower-palette-group button>small{color:#c0c1b8}
-.dragon-product-page .tower-palette-group button:hover{background:#23271d}
-.dragon-product-page .tower-palette-group button.active{background:#232d19;border-color:var(--luna)}
-.dragon-product-page .tower-accent-options button{border-color:#ffffff30;color:var(--paper);background:#12140f}
-.dragon-product-page .tower-accent-options button:hover{background:#23271d}
-.dragon-product-page .tower-accent-options button.active{border-color:var(--luna);box-shadow:inset 0 0 0 1px var(--luna)}
-.dragon-product-page .tower-accent-options button>i{border-color:#ffffff50}
-.dragon-product-page .tower-accent-other input{background:#12140f;color:var(--paper);border-color:#ffffff40}
-.dragon-product-page .tower-order .price{color:var(--paper)!important}
-.dragon-product-page .product-buy-button{background:var(--luna);color:var(--ink)}
-.dragon-product-page .product-buy-button:hover{background:#dcff83}
-.dragon-product-page .dragon-product-notices{background:transparent;color:var(--paper)}
-.dragon-product-page :is(.woocommerce-message,.woocommerce-info){background:#161c10;color:var(--paper);border-top-color:var(--luna)}
-.dragon-product-page .woocommerce-message::before{color:var(--luna)}
-.dragon-product-page .woocommerce-error{background:#291611;color:#ffe2da}
-.dragon-product-page .woocommerce-message .button{background:var(--luna);color:var(--ink)}
-.dragon-product-page :is(button,a,input):focus-visible{outline:2px solid var(--luna);outline-offset:3px}
-
-/* The calculator is archived for later; keep its dark, atmospheric treatment
-   on the request form while quotes are handled manually. */
-.commission-request-section{
-  background:radial-gradient(circle at 18% 63%,#9d78ff1f,transparent 25%),var(--ink);
-  color:var(--paper);padding:110px 5.2vw 130px;overflow:hidden
-}
-.commission-request-heading{
-  border-bottom:1px solid #ffffff2b;
-  grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);
-  align-items:end;gap:6vw;padding-bottom:70px;margin-bottom:0
-}
-.commission-request-heading>div:first-child>p{
-  color:#7b7d75;letter-spacing:.15em;text-transform:uppercase;margin:0 0 32px;font-size:8px
-}
-.commission-request-heading h2{
-  letter-spacing:-.08em;text-transform:uppercase;flex-direction:column;margin:0;
-  font-size:clamp(68px,9vw,142px);line-height:.73;display:flex
-}
-.commission-request-heading h2 span{color:#0000;-webkit-text-stroke:1px #f3efe694}
-.commission-request-notice{border-top:0;padding-top:0}
-.commission-request-notice strong{color:var(--paper);margin-bottom:13px}
-.commission-request-notice p{color:#989990;font-size:12px;line-height:1.65}
-.commission-request-shell{
-  border:1px solid #ffffff2e;grid-template-columns:minmax(240px,.55fr) minmax(0,1.45fr);
-  margin-top:58px
-}
-.commission-request-step{border-right:1px solid #ffffff2e;background:transparent;justify-content:center;align-items:center;gap:42px;position:relative;padding:35px}
-.commission-request-step>span{position:absolute;top:24px;left:24px}
-.commission-request-step .quote-orbit{margin:0}
-.commission-request-step>p{text-align:center;margin:0}
-.commission-request-form{
-  grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 18px;padding:clamp(32px,4.2vw,72px);
-  background:transparent
-}
-.request-field{border:0;padding:0}
-.request-field:nth-child(odd){border-right:0}
-.request-field label{color:#b2b2aa;letter-spacing:.13em;margin-bottom:9px;font-size:8px}
-.request-field input,.request-field select,.request-field textarea{
-  color:var(--paper);background:#12140f;border:1px solid #ffffff30;border-radius:0;
-  padding:13px 15px;font-size:13px;transition:border-color .18s,background .18s
-}
-.request-field input,.request-field select{height:52px;padding-top:0;padding-bottom:0}
-.request-field select{cursor:pointer}
-.request-field select option{color:var(--paper);background:#12140f}
-.request-field textarea{min-height:135px}
-.request-field input[type=file]{min-height:58px;color:#b2b2aa;padding:8px 10px}
-.request-field input[type=file]::file-selector-button{border:1px solid #ffffff30;background:#181b13;color:var(--paper)}
-.request-field>small,.request-upload-summary{color:#74766e}
-.request-reference-link{border-top-color:#ffffff2e}
-.request-field input:focus,.request-field select:focus,.request-field textarea:focus{border-color:var(--luna);background:#181b13}
-.request-consent{color:#989990}
-.request-estimate{background:#111a08;border-color:#c8ff3d61}
-.commission-request-status{background:#12140f;color:var(--paper);border-top-color:#ffffff2e}
-.commission-request-form :focus-visible{outline:3px solid var(--luna);outline-offset:3px}
-
-@media(max-width:820px){
-  .commission-request-heading{grid-template-columns:1fr;gap:42px}
-  .commission-request-notice{border-top:1px solid #ffffff2b;padding-top:24px}
-  .commission-request-shell{grid-template-columns:1fr}
-  .commission-request-step{display:none}
-}
-@media(max-width:700px){
-  .commission-request-section{padding:76px 20px 90px}
-  .commission-request-heading{padding-bottom:42px;margin-bottom:0}
-  .commission-request-heading h2{font-size:17vw}
-  .commission-request-heading>div:first-child>p{margin-bottom:28px}
-  .commission-request-notice p{font-size:13px}
-  .commission-request-shell{margin-top:38px}
-  .commission-request-form{grid-template-columns:1fr;gap:22px;padding:24px 18px 28px}
-  .request-field,.request-field:nth-of-type(2n){grid-column:auto;padding:0}
-  .request-field input,.request-field select,.request-field textarea{font-size:16px;min-height:54px}
-  .request-field textarea{min-height:150px}
-  .request-estimate{grid-template-columns:1fr auto;padding:20px}
-  .request-consent{padding:20px 0}
-  .commission-request-submit{min-height:60px;padding-inline:20px}
-  .commission-request-status{padding:24px 20px}
 }
