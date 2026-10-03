@@ -20,39 +20,6 @@
   menu?.addEventListener('click', () => setMenu(menu.getAttribute('aria-expanded') !== 'true'));
   mobileShop?.addEventListener('click', () => setMobileShop(mobileShop.getAttribute('aria-expanded') !== 'true'));
 
-  let cartSyncToken = 0;
-  const paintCartCount = count => {
-    document.querySelectorAll('.nav-cart-count,.shop-cart-count,.mobile-menu-cart-count').forEach(badge => {
-      badge.textContent = count;
-      badge.classList.toggle('is-empty', count < 1);
-      badge.setAttribute('aria-label', `${count} ${count === 1 ? 'item' : 'items'}`);
-    });
-  };
-  const syncCartCount = () => {
-    const token = ++cartSyncToken;
-    fetch(`/wp-json/wc/store/v1/cart?luna_cart_count=${Date.now()}`, {credentials: 'same-origin', cache: 'no-store'})
-      .then(response => {
-        if (!response.ok) throw new Error('Unable to refresh cart');
-        return response.json();
-      })
-      .then(cart => {
-        if (token !== cartSyncToken) return;
-        paintCartCount(Math.max(0, Number(cart?.items_count) || 0));
-      })
-      .catch(() => {});
-  };
-  window.addEventListener('pageshow', syncCartCount);
-  window.addEventListener('focus', syncCartCount);
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) syncCartCount();
-  });
-  document.body?.addEventListener('wc-blocks_added_to_cart', syncCartCount);
-  document.body?.addEventListener('wc-blocks_removed_from_cart', syncCartCount);
-  if (window.jQuery) {
-    window.jQuery(document.body).on('added_to_cart removed_from_cart wc_fragments_refreshed updated_wc_div', syncCartCount);
-  }
-  syncCartCount();
-
   const shopTrigger = document.querySelector('.nav-shop-trigger');
   const shopDropdown = document.querySelector('.nav-shop-dropdown');
   const setShopMenu = open => {

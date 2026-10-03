@@ -91,7 +91,14 @@ $home = add_query_arg([
         }
         let cartCount = 0;
         const paintBadge = () => {
-          if (!cartCount) return;
+          const badges = Array.prototype.slice.call(doc.querySelectorAll('.luna-cart-count'));
+          if (cartCount < 1) {
+            badges.forEach(badge => badge.remove());
+            return;
+          }
+          badges.forEach(badge => {
+            if (badge.textContent !== String(cartCount)) badge.textContent = cartCount;
+          });
           Array.prototype.forEach.call(doc.querySelectorAll('a'), a => {
             if (a.querySelector('.luna-cart-count')) return;
             const label = (a.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
@@ -141,10 +148,27 @@ $home = add_query_arg([
         if (doc.body && frame.contentWindow.MutationObserver) {
           new frame.contentWindow.MutationObserver(paintEnhancements).observe(doc.body, { childList: true, subtree: true });
         }
-        fetch('/wp-json/wc/store/v1/cart', { credentials: 'same-origin', cache: 'no-store' })
-          .then(r => r.json())
-          .then(c => { cartCount = (c && c.items_count) || 0; paintEnhancements(); })
-          .catch(() => {});
+        let cartSyncToken = 0;
+        const syncCartCount = () => {
+          const token = ++cartSyncToken;
+          fetch('/wp-json/wc/store/v1/cart?luna_cart_count=' + Date.now(), { credentials: 'same-origin', cache: 'no-store' })
+            .then(r => {
+              if (!r.ok) throw new Error('Unable to refresh cart');
+              return r.json();
+            })
+            .then(c => {
+              if (token !== cartSyncToken) return;
+              cartCount = Math.max(0, Number(c && c.items_count) || 0);
+              paintEnhancements();
+            })
+            .catch(() => {});
+        };
+        window.addEventListener('pageshow', syncCartCount);
+        window.addEventListener('focus', syncCartCount);
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) syncCartCount();
+        });
+        syncCartCount();
   });
 })();
 </script>
